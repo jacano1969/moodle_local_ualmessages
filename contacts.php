@@ -23,6 +23,7 @@ require('../../config.php');
 require('lib.php');
 
 $viewing = optional_param('viewing', 0, PARAM_ALPHANUMEXT);
+$page = optional_param('page', 0, PARAM_INT);
 
 require_login();
 
@@ -41,6 +42,6 @@ $renderer = $PAGE->get_renderer('local_ualmessages');
 
 echo $OUTPUT->header();
 
-echo $renderer->print_message_contact_page($viewing);
+echo $renderer->print_message_contact_page($viewing, $page);
 
 echo $OUTPUT->footer();

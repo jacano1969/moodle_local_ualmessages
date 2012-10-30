@@ -180,9 +180,9 @@ TEMP */
     }
 
     // choose contact to message
-    public function print_message_contact_page($viewing) {
+    public function print_message_contact_page($viewing, $page) {
         
-        global $USER, $CFG;
+        global $USER, $CFG, $PAGE, $OUTPUT;
         
         $content = html_writer::start_tag('div', array('class'=>'content messages'));
         $content .= html_writer::start_tag('h1');
@@ -280,11 +280,79 @@ TEMP */
         // inbox
         $content .= html_writer::start_tag('div', array('class'=>'inbox'));
         $content .= html_writer::start_tag('ul');
+        
+        // get copurse participant contacts
+        $course_id = intval(substr($viewing, 7));
+        if(!empty($course_id)) {
             
-        // get contacts
-        
-        
-        
+            $countparticipants = count_enrolled_users($coursecontexts[$course_id]);
+            $participants = get_enrolled_users($coursecontexts[$course_id], '', 0, 'u.*', '', $page*MESSAGE_CONTACTS_PER_PAGE, MESSAGE_CONTACTS_PER_PAGE);
+            
+            $pagingbar = new paging_bar($countparticipants, $page, MESSAGE_CONTACTS_PER_PAGE, $PAGE->url, 'page');
+            $content .= $OUTPUT->render($pagingbar);
+            
+            $content .= html_writer::start_tag('table', array('id' => 'message_participants', 'class' => 'boxaligncenter', 'cellspacing' => '2', 'cellpadding' => '0', 'border' => '0'));
+            
+            $iscontact = true;
+            $isblocked = false;
+            foreach ($participants as $participant) {
+                if ($participant->id != $USER->id) {
+                    $participant->messagecount = 0;
+                    
+                    $fullname  = fullname($participant);
+                    $fullnamelink  = $fullname;
+                
+                    $linkclass = '';
+                    if (!empty($selecteduser) && $participant->id == $selecteduser->id) {
+                        $linkclass = 'messageselecteduser';
+                    }
+                    
+                    if ($participant->messagecount > 0 ){
+                        $fullnamelink = '<strong>'.$fullnamelink.' ('.$participant->messagecount.')</strong>';
+                    }
+                
+                    $strcontact = $strblock = $strhistory = null;
+                    $strcontact = message_get_contact_add_remove_link($iscontact, $isblocked, $participant);
+                    $strblock   = message_get_contact_block_link($iscontact, $isblocked, $participant);
+                    $strhistory = message_history_link($USER->id, $participant->id, true, '', '', 'icon');
+                
+                    $content .= html_writer::start_tag('tr');
+                    $content .= html_writer::start_tag('td', array('class' => 'pix'));
+                    $content .= $OUTPUT->user_picture($participant, array('size' => 20, 'courseid' => SITEID));
+                    $content .= html_writer::end_tag('td');
+                
+                    $content .= html_writer::start_tag('td', array('class' => 'contact'));
+                
+                    $popupoptions = array(
+                            'height' => MESSAGE_DISCUSSION_HEIGHT,
+                            'width' => MESSAGE_DISCUSSION_WIDTH,
+                            'menubar' => false,
+                            'location' => false,
+                            'status' => true,
+                            'scrollbars' => true,
+                            'resizable' => true);
+                
+                    $link = $action = null;
+                    if (!empty($selectcontacturl)) {
+                        $link = new moodle_url($selectcontacturl.'&user2='.$participant->id);
+                    } else {
+                        //can $selectcontacturl be removed and maybe the be removed and hardcoded?
+                        $link = new moodle_url("/message/index.php?id=$participant->id");
+                        $action = new popup_action('click', $link, "message_$participant->id", $popupoptions);
+                    }
+                    $content .= $OUTPUT->action_link($link, $fullnamelink, $action, array('class' => $linkclass,'title' => get_string('sendmessageto', 'message', $fullname)));
+                
+                    $content .= html_writer::end_tag('td');
+                
+                    $content .= html_writer::tag('td', '&nbsp;'.$strcontact.$strblock.'&nbsp;'.$strhistory, array('class' => 'link'));
+                
+                    $content .= html_writer::end_tag('tr');
+                }
+            }
+        }
+
+        $content .= html_writer::end_tag('table');
+    
         $content .= html_writer::end_tag('div');
         
         $content .= html_writer::end_tag('div');
