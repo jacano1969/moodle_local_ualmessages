@@ -337,7 +337,7 @@ TEMP */
                         $link = new moodle_url($selectcontacturl.'&user2='.$participant->id);
                     } else {
                         //can $selectcontacturl be removed and maybe the be removed and hardcoded?
-                        $link = new moodle_url("/message/index.php?id=$participant->id");
+                        $link = new moodle_url("/local/ualmessages/send.php?id=$participant->id");
                         $action = new popup_action('click', $link, "message_$participant->id", $popupoptions);
                     }
                     $content .= $OUTPUT->action_link($link, $fullnamelink, $action, array('class' => $linkclass,'title' => get_string('sendmessageto', 'message', $fullname)));
