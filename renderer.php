@@ -23,7 +23,7 @@
 class local_ualmessages_renderer extends plugin_renderer_base {
     
     // your message / recent conversations page
-    public function print_ual_messages_page() {        
+    public function print_ual_messages_page($search) {        
                
         global $USER, $CFG;
         
@@ -69,12 +69,14 @@ class local_ualmessages_renderer extends plugin_renderer_base {
         
         // filter
         $content .= html_writer::start_tag('div', array('class'=>'filter'));
+        $content .= html_writer::start_tag('form', array('id' => 'messagefilter','method' => 'get','action' => 'index.php'));
         $content .= html_writer::start_tag('p');
         $content .= html_writer::start_tag('label');
         $content .= get_string('searchmessages', 'local_ualmessages');
         $content .= html_writer::end_tag('label');
-        $content .= html_writer::start_tag('input', array('name'=>'', 'value'=>get_string('enterasearchterm', 'local_ualmessages'),'class'=>'text'));
-        $content .= html_writer::start_tag('input', array('type'=>'submit','name'=>'','value'=>get_string('search', 'local_ualmessages'),'class'=>'submit'));
+        $content .= html_writer::start_tag('input', array('name'=>'search', 'value'=> ($search=='') ? get_string('enterasearchterm', 'local_ualmessages') : $search,'class'=>'text','onclick'=>'this.form.search.value=\'\';'));
+        $content .= html_writer::start_tag('input', array('type'=>'submit','name'=>'','value'=>get_string('search', 'local_ualmessages'),'class'=>'submit', 'onclick'=>'if(this.form.search.value==\'\' || this.form.search.value==\''.get_string('enterasearchterm', 'local_ualmessages').'\'){return false;}'));  
+        $content .= html_writer::end_tag('form');
         $content .= html_writer::end_tag('p');
         $content .= html_writer::end_tag('div');
                
@@ -83,14 +85,14 @@ class local_ualmessages_renderer extends plugin_renderer_base {
         $content .= html_writer::start_tag('ul');
             
         // get unread messages
-        $unread_messages = get_messages_unread($USER, 50);
+        $unread_messages = get_messages_unread($USER, 50, stripcslashes(clean_text(trim($search))));
         
         if($unread_messages) {
             $content .= $unread_messages;
         }
         
         // get read messages
-        $read_messages = get_messages_read($USER, 50);
+        $read_messages = get_messages_read($USER, 50, stripcslashes(clean_text(trim($search))));
         
         if($read_messages) {
             $content .= $read_messages;
@@ -365,9 +367,9 @@ TEMP */
         
             if($countonlinecontacts) {
                         
-                if (empty($titletodisplay)) {
+                //if (empty($titletodisplay)) {
                     //message_print_heading(get_string('onlinecontacts', 'message', $countonlinecontacts));
-                }
+                //}
         
                 $isuserblocked = false;
                 $isusercontact = true;
@@ -380,9 +382,9 @@ TEMP */
         
             if ($countofflinecontacts) {
                         
-                if (empty($titletodisplay)) {
+                //if (empty($titletodisplay)) {
                     //message_print_heading(get_string('offlinecontacts', 'message', $countofflinecontacts));
-                }
+                //}
         
                 $isuserblocked = false;
                 $isusercontact = true;
@@ -470,7 +472,7 @@ TEMP */
         if (!empty($selectcontacturl)) {
             $link = new moodle_url($selectcontacturl.'&user2='.$contact->id);
         } else {
-            $link = new moodle_url("/message/index.php?id=$contact->id");
+            $link = new moodle_url("/local/ualmessages/index.php?id=$contact->id");
             $action = new popup_action('click', $link, "message_$contact->id", $popupoptions);
         }
         $this_contact.= $OUTPUT->action_link($link, $fullnamelink, $action, array('class' => $linkclass,'title' => get_string('sendmessageto', 'message', $fullname)));

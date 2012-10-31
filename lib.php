@@ -25,7 +25,7 @@ require_once(dirname(__FILE__) . '/../../config.php');
  *
  * Author: Daniel J. Somers 29/10/2012
  */
-function get_messages_unread($user, $msg_length) {
+function get_messages_unread($user, $msg_length, $search) {
     
     global $OUTPUT, $DB, $CFG;
     
@@ -33,7 +33,12 @@ function get_messages_unread($user, $msg_length) {
     $user_messages="";
     
     // get all unread messages for user
-    $msg_unread = $DB->get_records_select('message', " useridto=$user->id", null, 'timecreated');
+    if($search!='') {
+        $search = str_replace("'", "''", $search);
+        $msg_unread = $DB->get_records_select('message', " useridto=$user->id and fullmessage like('%$search%')", null, 'timecreated');
+    } else {
+        $msg_unread = $DB->get_records_select('message', " useridto=$user->id", null, 'timecreated');
+    }
     
     if(!empty($msg_unread))
     {
@@ -104,7 +109,7 @@ function get_messages_unread($user, $msg_length) {
  *
  * Author: Daniel J. Somers 30/10/2012
  */
-function get_messages_read($user, $msg_length) {
+function get_messages_read($user, $msg_length, $search) {
     
     global $OUTPUT, $DB, $CFG;
     
@@ -112,7 +117,12 @@ function get_messages_read($user, $msg_length) {
     $user_messages="";
     
     // get all read messages for user
-    $msg_read = $DB->get_records_select('message_read', " useridto=$user->id", null, 'timecreated');
+    if($search!='') {
+        $search = str_replace("'", "''", $search);
+        $msg_read = $DB->get_records_select('message_read', " useridto=$user->id and fullmessage like('%$search%')", null, 'timecreated');
+    } else {
+        $msg_read = $DB->get_records_select('message_read', " useridto=$user->id", null, 'timecreated');
+    }
     
     if(!empty($msg_read))
     {

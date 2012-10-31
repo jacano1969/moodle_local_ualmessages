@@ -18,6 +18,8 @@
 require('../../config.php');
 require('lib.php');
 
+$search = optional_param('search', '', PARAM_CLEAN);
+
 require_login();
 
 $context = context_user::instance($USER->id);
@@ -39,6 +41,6 @@ $renderer = $PAGE->get_renderer('local_ualmessages');
 
 echo $OUTPUT->header();
 
-echo $renderer->print_ual_messages_page();
+echo $renderer->print_ual_messages_page($search);
 
 echo $OUTPUT->footer();
