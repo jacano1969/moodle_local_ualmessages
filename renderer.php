@@ -366,7 +366,7 @@ TEMP */
             if($countonlinecontacts) {
                         
                 if (empty($titletodisplay)) {
-                    message_print_heading(get_string('onlinecontacts', 'message', $countonlinecontacts));
+                    //message_print_heading(get_string('onlinecontacts', 'message', $countonlinecontacts));
                 }
         
                 $isuserblocked = false;
@@ -381,7 +381,7 @@ TEMP */
             if ($countofflinecontacts) {
                         
                 if (empty($titletodisplay)) {
-                    message_print_heading(get_string('offlinecontacts', 'message', $countofflinecontacts));
+                    //message_print_heading(get_string('offlinecontacts', 'message', $countofflinecontacts));
                 }
         
                 $isuserblocked = false;
@@ -395,7 +395,7 @@ TEMP */
             }
             
             if ($countstrangers) {
-                message_print_heading(get_string('incomingcontacts', 'message', $countstrangers));
+                //message_print_heading(get_string('incomingcontacts', 'message', $countstrangers));
         
                 $isuserblocked = false;
                 $isusercontact = false;
