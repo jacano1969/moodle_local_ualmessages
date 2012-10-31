@@ -372,7 +372,7 @@ TEMP */
                 $isuserblocked = false;
                 $isusercontact = true;
                 foreach ($onlinecontacts as $contact) {
-                    if ($minmessages == 0 || $contact->messagecount >= $minmessages) {
+                    if ($contact->messagecount >= 0) {
                         $content .= $this->get_contacts($contact, $isusercontact, $isuserblocked);
                     }
                 }
@@ -387,7 +387,7 @@ TEMP */
                 $isuserblocked = false;
                 $isusercontact = true;
                 foreach ($offlinecontacts as $contact) {
-                    if ($minmessages == 0 || $contact->messagecount >= $minmessages) {
+                    if ($contact->messagecount >= 0) {
                         $content .= $this->get_contacts($contact, $isusercontact, $isuserblocked);
                     }
                 }
