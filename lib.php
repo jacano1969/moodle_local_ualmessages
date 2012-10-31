@@ -190,8 +190,13 @@ function get_recent_conversation($message_id) {
     
     $logged_in_user_id = $USER->id;
     
-    // get message data
+    // get message data (unread message)
     $msg = $DB->get_record('message', array('id'=>$message_id));
+    
+    if(!$msg){
+        // it might be an already read message
+        $msg = $DB->get_record('message_read', array('id'=>$message_id));
+    }
 
     $msg_from_user_id = $msg->useridfrom;
     $msg_from_user = $DB->get_record('user', array('id'=>$msg_from_user_id));

@@ -179,6 +179,7 @@ TEMP */
         return $content;
     }
 
+    
     // choose contact to message
     public function print_message_contact_page($viewing, $page) {
         
@@ -239,9 +240,6 @@ TEMP */
         $courses = enrol_get_users_courses($USER->id, true);
         $coursecontexts = message_get_course_contexts($courses);
         
-        /*$blockedusers = message_get_blocked_users($USER->id, false);
-        $countblocked = count($blockedusers);*/
-        
         if (!empty($courses)) {
             $courses_options = array();
     
@@ -262,11 +260,6 @@ TEMP */
                 $options[] = array(get_string('courses') => $courses_options);
             }
         }
-    
-        /*if ($countblocked>0) {
-            $str = get_string('blockedusers','message', $countblocked);
-            $options[MESSAGE_VIEW_BLOCKED] = $str;
-        }*/
         
         $content .= html_writer::start_tag('p');
         $content .= html_writer::start_tag('label');
@@ -281,7 +274,7 @@ TEMP */
         $content .= html_writer::start_tag('div', array('class'=>'inbox'));
         $content .= html_writer::start_tag('ul');
         
-        // get copurse participant contacts
+        // get course participant contacts - using the filter
         $course_id = intval(substr($viewing, 7));
         if(!empty($course_id)) {
             
@@ -349,6 +342,77 @@ TEMP */
                     $content .= html_writer::end_tag('tr');
                 }
             }
+        } else {   // get all contacts
+            
+            // find contacts
+            $countunreadtotal = message_count_unread_messages($USER);
+            $blockedusers = message_get_blocked_users($USER, '');
+            list($onlinecontacts, $offlinecontacts, $strangers) = message_get_contacts($USER, '');
+            
+            $content .= html_writer::start_tag('div', array('class' => 'contactselector mdl-align'));
+            
+            $countonlinecontacts  = count($onlinecontacts);
+            $countofflinecontacts = count($offlinecontacts);
+            $countstrangers       = count($strangers);
+            $isuserblocked = null;
+        
+            if ($countonlinecontacts + $countofflinecontacts == 0) {
+                $content .= html_writer::tag('div', get_string('contactlistempty', 'message'), array('class' => 'heading'));
+            }
+        
+            $content .= html_writer::start_tag('table', array('id' => 'message_contacts', 'class' => 'boxaligncenter'));
+        
+        
+            if($countonlinecontacts) {
+                        
+                if (empty($titletodisplay)) {
+                    message_print_heading(get_string('onlinecontacts', 'message', $countonlinecontacts));
+                }
+        
+                $isuserblocked = false;
+                $isusercontact = true;
+                foreach ($onlinecontacts as $contact) {
+                    if ($minmessages == 0 || $contact->messagecount >= $minmessages) {
+                        $content .= $this->get_contacts($contact, $isusercontact, $isuserblocked);
+                    }
+                }
+            }
+        
+            if ($countofflinecontacts) {
+                        
+                if (empty($titletodisplay)) {
+                    message_print_heading(get_string('offlinecontacts', 'message', $countofflinecontacts));
+                }
+        
+                $isuserblocked = false;
+                $isusercontact = true;
+                foreach ($offlinecontacts as $contact) {
+                    if ($minmessages == 0 || $contact->messagecount >= $minmessages) {
+                        $content .= $this->get_contacts($contact, $isusercontact, $isuserblocked);
+                    }
+                }
+        
+            }
+            
+            if ($countstrangers) {
+                message_print_heading(get_string('incomingcontacts', 'message', $countstrangers));
+        
+                $isuserblocked = false;
+                $isusercontact = false;
+                foreach ($strangers as $stranger) {
+                    if ($stranger->messagecount >= 0) {
+                        $content .= $this->get_contacts($stranger, $isusercontact, $isuserblocked);
+                    }
+                }
+            }
+            
+            $content .= html_writer::end_tag('table');
+        
+            if ($countstrangers && ($countonlinecontacts + $countofflinecontacts == 0)) {  // Extra help
+                $content .= html_writer::tag('div','('.get_string('addsomecontactsincoming', 'message').')',array('class' => 'note'));
+            }
+
+            $content .= html_writer::end_tag('div');
         }
 
         $content .= html_writer::end_tag('table');
@@ -359,6 +423,67 @@ TEMP */
           
         return $content;
     }
+    
+    
+    private function get_contacts($contact, $incontactlist, $isblocked) {
+        
+        global $OUTPUT, $USER;
+        
+        $this_contact="";
+        
+        $fullname  = fullname($contact);
+        $fullnamelink  = $fullname;
+    
+        $linkclass = '';
+        if (!empty($selecteduser) && $contact->id == $selecteduser->id) {
+            $linkclass = 'messageselecteduser';
+        }
+    
+        /// are there any unread messages for this contact?
+        if ($contact->messagecount > 0 ){
+            $fullnamelink = '<strong>'.$fullnamelink.' ('.$contact->messagecount.')</strong>';
+        }
+    
+        $strcontact = $strblock = $strhistory = null;
+    
+        $strcontact = message_get_contact_add_remove_link($incontactlist, $isblocked, $contact);
+        $strblock   = message_get_contact_block_link($incontactlist, $isblocked, $contact);
+        $strhistory = message_history_link($USER->id, $contact->id, true, '', '', 'icon');
+    
+        $this_contact.= html_writer::start_tag('tr');
+        $this_contact.= html_writer::start_tag('td', array('class' => 'pix'));
+        $this_contact.= $OUTPUT->user_picture($contact, array('size' => 20, 'courseid' => SITEID));
+        $this_contact.= html_writer::end_tag('td');
+    
+        $this_contact.= html_writer::start_tag('td', array('class' => 'contact'));
+    
+        $popupoptions = array(
+                'height' => MESSAGE_DISCUSSION_HEIGHT,
+                'width' => MESSAGE_DISCUSSION_WIDTH,
+                'menubar' => false,
+                'location' => false,
+                'status' => true,
+                'scrollbars' => true,
+                'resizable' => true);
+    
+        $link = $action = null;
+        if (!empty($selectcontacturl)) {
+            $link = new moodle_url($selectcontacturl.'&user2='.$contact->id);
+        } else {
+            $link = new moodle_url("/message/index.php?id=$contact->id");
+            $action = new popup_action('click', $link, "message_$contact->id", $popupoptions);
+        }
+        $this_contact.= $OUTPUT->action_link($link, $fullnamelink, $action, array('class' => $linkclass,'title' => get_string('sendmessageto', 'message', $fullname)));
+    
+        $this_contact.= html_writer::end_tag('td');
+    
+        $this_contact.= html_writer::tag('td', '&nbsp;'.$strcontact.$strblock.'&nbsp;'.$strhistory, array('class' => 'link'));
+    
+        $this_contact.= html_writer::end_tag('tr');
+        
+        return $this_contact;
+    }
+    
     
     // create new message
     public function print_create_message_page() {
