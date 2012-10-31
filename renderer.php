@@ -183,7 +183,7 @@ TEMP */
 
     
     // choose contact to message
-    public function print_message_contact_page($viewing, $page) {
+    public function print_message_contact_page($viewing, $page, $search) {
         
         global $USER, $CFG, $PAGE, $OUTPUT;
         
@@ -234,8 +234,9 @@ TEMP */
         $content .= html_writer::start_tag('label');
         $content .= get_string('searchcontacts', 'local_ualmessages');
         $content .= html_writer::end_tag('label');
-        $content .= html_writer::start_tag('input', array('name'=>'', 'value'=>get_string('searchcontacts', 'local_ualmessages'),'class'=>'text'));
-        $content .= html_writer::start_tag('input', array('type'=>'submit','name'=>'searchcontacts','value'=>get_string('search', 'local_ualmessages'),'class'=>'submit'));
+        
+        $content .= html_writer::start_tag('input', array('name'=>'search', 'value'=> ($search=='') ? get_string('searchcontacts', 'local_ualmessages') : $search,'class'=>'text','onclick'=>'this.form.search.value=\'\';'));
+        $content .= html_writer::start_tag('input', array('type'=>'submit','name'=>'','value'=>get_string('search', 'local_ualmessages'),'class'=>'submit','onclick'=>'if(this.form.search.value==\'\' || this.form.search.value==\''.get_string('searchcontacts', 'local_ualmessages').'\'){return false;}'));  
         $content .= html_writer::end_tag('p');
         
         // get user enrolled courses
@@ -267,7 +268,7 @@ TEMP */
         $content .= html_writer::start_tag('label');
         $content .= get_string('filterbycourse', 'local_ualmessages');
         $content .= html_writer::end_tag('label');
-        $content .= html_writer::select($options, 'viewing', $viewing, false, array('id' => 'viewing','onchange' => 'this.form.submit()'));
+        $content .= html_writer::select($options, 'viewing', $viewing, false, array('id' => 'viewing','onchange' => 'this.form.search.value=\'\';this.form.submit()'));
         $content .= html_writer::end_tag('p');
         $content .= html_writer::end_tag('form');
         $content .= html_writer::end_tag('div');
@@ -276,14 +277,17 @@ TEMP */
         $content .= html_writer::start_tag('div', array('class'=>'inbox'));
         $content .= html_writer::start_tag('ul');
         
+        // prepare search
+        $search = stripcslashes(clean_text(trim($search)));
+        
         // get course participant contacts - using the filter
         $course_id = intval(substr($viewing, 7));
         if(!empty($course_id)) {
             
             $countparticipants = count_enrolled_users($coursecontexts[$course_id]);
-            $participants = get_enrolled_users($coursecontexts[$course_id], '', 0, 'u.*', '', $page*MESSAGE_CONTACTS_PER_PAGE, MESSAGE_CONTACTS_PER_PAGE);
+            $participants = get_enrolled_users($coursecontexts[$course_id], '', 0, 'u.*', '', $page*10, 10);
             
-            $pagingbar = new paging_bar($countparticipants, $page, MESSAGE_CONTACTS_PER_PAGE, $PAGE->url, 'page');
+            $pagingbar = new paging_bar($countparticipants, $page, 10, $PAGE->url, 'page');
             $content .= $OUTPUT->render($pagingbar);
             
             $content .= html_writer::start_tag('table', array('id' => 'message_participants', 'class' => 'boxaligncenter', 'cellspacing' => '2', 'cellpadding' => '0', 'border' => '0'));
@@ -291,57 +295,65 @@ TEMP */
             $iscontact = true;
             $isblocked = false;
             foreach ($participants as $participant) {
-                if ($participant->id != $USER->id) {
+                if ($participant->id != $USER->id) {                    
                     $participant->messagecount = 0;
                     
                     $fullname  = fullname($participant);
-                    $fullnamelink  = $fullname;
-                
-                    $linkclass = '';
-                    if (!empty($selecteduser) && $participant->id == $selecteduser->id) {
-                        $linkclass = 'messageselecteduser';
-                    }
-                    
-                    if ($participant->messagecount > 0 ){
-                        $fullnamelink = '<strong>'.$fullnamelink.' ('.$participant->messagecount.')</strong>';
-                    }
-                
-                    $strcontact = $strblock = $strhistory = null;
-                    $strcontact = message_get_contact_add_remove_link($iscontact, $isblocked, $participant);
-                    $strblock   = message_get_contact_block_link($iscontact, $isblocked, $participant);
-                    $strhistory = message_history_link($USER->id, $participant->id, true, '', '', 'icon');
-                
-                    $content .= html_writer::start_tag('tr');
-                    $content .= html_writer::start_tag('td', array('class' => 'pix'));
-                    $content .= $OUTPUT->user_picture($participant, array('size' => 20, 'courseid' => SITEID));
-                    $content .= html_writer::end_tag('td');
-                
-                    $content .= html_writer::start_tag('td', array('class' => 'contact'));
-                
-                    $popupoptions = array(
-                            'height' => MESSAGE_DISCUSSION_HEIGHT,
-                            'width' => MESSAGE_DISCUSSION_WIDTH,
-                            'menubar' => false,
-                            'location' => false,
-                            'status' => true,
-                            'scrollbars' => true,
-                            'resizable' => true);
-                
-                    $link = $action = null;
-                    if (!empty($selectcontacturl)) {
-                        $link = new moodle_url($selectcontacturl.'&user2='.$participant->id);
+
+                    // check if search if used
+                    if($search!='' && stripos($fullname,$search,0)===false)
+                    {
+                        continue;
                     } else {
-                        //can $selectcontacturl be removed and maybe the be removed and hardcoded?
-                        $link = new moodle_url("/local/ualmessages/send.php?id=$participant->id");
-                        $action = new popup_action('click', $link, "message_$participant->id", $popupoptions);
+                    
+                        $fullnamelink  = $fullname;
+                    
+                        $linkclass = '';
+                        if (!empty($selecteduser) && $participant->id == $selecteduser->id) {
+                            $linkclass = 'messageselecteduser';
+                        }
+                        
+                        if ($participant->messagecount > 0 ){
+                            $fullnamelink = '<strong>'.$fullnamelink.' ('.$participant->messagecount.')</strong>';
+                        }
+                    
+                        $strcontact = $strblock = $strhistory = null;
+                        $strcontact = message_get_contact_add_remove_link($iscontact, $isblocked, $participant);
+                        $strblock   = message_get_contact_block_link($iscontact, $isblocked, $participant);
+                        $strhistory = message_history_link($USER->id, $participant->id, true, '', '', 'icon');
+                    
+                        $content .= html_writer::start_tag('tr');
+                        $content .= html_writer::start_tag('td', array('class' => 'pix'));
+                        $content .= $OUTPUT->user_picture($participant, array('size' => 20, 'courseid' => SITEID));
+                        $content .= html_writer::end_tag('td');
+                    
+                        $content .= html_writer::start_tag('td', array('class' => 'contact'));
+                    
+                        $popupoptions = array(
+                                'height' => MESSAGE_DISCUSSION_HEIGHT,
+                                'width' => MESSAGE_DISCUSSION_WIDTH,
+                                'menubar' => false,
+                                'location' => false,
+                                'status' => true,
+                                'scrollbars' => true,
+                                'resizable' => true);
+                    
+                        $link = $action = null;
+                        if (!empty($selectcontacturl)) {
+                            $link = new moodle_url($selectcontacturl.'&user2='.$participant->id);
+                        } else {
+                            //can $selectcontacturl be removed and maybe the be removed and hardcoded?
+                            $link = new moodle_url("/local/ualmessages/send.php?id=$participant->id");
+                            $action = new popup_action('click', $link, "message_$participant->id", $popupoptions);
+                        }
+                        $content .= $OUTPUT->action_link($link, $fullnamelink, $action, array('class' => $linkclass,'title' => get_string('sendmessageto', 'message', $fullname)));
+                    
+                        $content .= html_writer::end_tag('td');
+                    
+                        $content .= html_writer::tag('td', '&nbsp;'.$strcontact.$strblock.'&nbsp;'.$strhistory, array('class' => 'link'));
+                    
+                        $content .= html_writer::end_tag('tr');
                     }
-                    $content .= $OUTPUT->action_link($link, $fullnamelink, $action, array('class' => $linkclass,'title' => get_string('sendmessageto', 'message', $fullname)));
-                
-                    $content .= html_writer::end_tag('td');
-                
-                    $content .= html_writer::tag('td', '&nbsp;'.$strcontact.$strblock.'&nbsp;'.$strhistory, array('class' => 'link'));
-                
-                    $content .= html_writer::end_tag('tr');
                 }
             }
         } else {   // get all contacts
@@ -375,7 +387,7 @@ TEMP */
                 $isusercontact = true;
                 foreach ($onlinecontacts as $contact) {
                     if ($contact->messagecount >= 0) {
-                        $content .= $this->get_contacts($contact, $isusercontact, $isuserblocked);
+                        $content .= $this->get_contacts($contact, $isusercontact, $isuserblocked, $search);
                     }
                 }
             }
@@ -390,7 +402,7 @@ TEMP */
                 $isusercontact = true;
                 foreach ($offlinecontacts as $contact) {
                     if ($contact->messagecount >= 0) {
-                        $content .= $this->get_contacts($contact, $isusercontact, $isuserblocked);
+                        $content .= $this->get_contacts($contact, $isusercontact, $isuserblocked, $search);
                     }
                 }
         
@@ -403,7 +415,7 @@ TEMP */
                 $isusercontact = false;
                 foreach ($strangers as $stranger) {
                     if ($stranger->messagecount >= 0) {
-                        $content .= $this->get_contacts($stranger, $isusercontact, $isuserblocked);
+                        $content .= $this->get_contacts($stranger, $isusercontact, $isuserblocked, $search);
                     }
                 }
             }
@@ -427,7 +439,7 @@ TEMP */
     }
     
     
-    private function get_contacts($contact, $incontactlist, $isblocked) {
+    private function get_contacts($contact, $incontactlist, $isblocked, $search) {
         
         global $OUTPUT, $USER;
         
@@ -435,6 +447,15 @@ TEMP */
         
         $fullname  = fullname($contact);
         $fullnamelink  = $fullname;
+        
+        // check if search if used
+        if($search!='')
+        {
+            if($search!='' && stripos($fullname,$search,0)===false)
+            {
+                return $this_contact;
+            }
+        }
     
         $linkclass = '';
         if (!empty($selecteduser) && $contact->id == $selecteduser->id) {

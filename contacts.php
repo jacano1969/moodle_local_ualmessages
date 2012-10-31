@@ -24,6 +24,7 @@ require('lib.php');
 
 $viewing = optional_param('viewing', 0, PARAM_ALPHANUMEXT);
 $page = optional_param('page', 0, PARAM_INT);
+$search = optional_param('search', '', PARAM_CLEAN);
 
 require_login();
 
@@ -42,6 +43,6 @@ $renderer = $PAGE->get_renderer('local_ualmessages');
 
 echo $OUTPUT->header();
 
-echo $renderer->print_message_contact_page($viewing, $page);
+echo $renderer->print_message_contact_page($viewing, $page, $search);
 
 echo $OUTPUT->footer();
