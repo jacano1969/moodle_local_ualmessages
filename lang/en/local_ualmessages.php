@@ -14,5 +14,7 @@ $string['send'] = 'Send';
 $string['searchcontacts'] = 'Search contacts';
 $string['filterbycourse'] = 'Filter by course';
 $string['choosecourse'] = 'Choose course';
-
+$string['createanewmessage'] = 'Create a new message';
+$string['chooseacontact'] = 'Choose a contact';
+$string['to'] = 'To';
 

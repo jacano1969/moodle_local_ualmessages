@@ -22,16 +22,7 @@
 require('../../config.php');
 require('lib.php');
 
-$user1   = optional_param('user1',  0, PARAM_INT);
-$user2   = optional_param('user2',   0, PARAM_INT);
-$history = optional_param('history', 0, PARAM_INT);
-
-// show message
-if($user1==0 && $user2==0 && $history==0) {
-    $id  = required_param('id', PARAM_INT);   // message id
-} else {
-    $id=0;
-}
+$user_to_id = optional_param('id', 0, PARAM_INT);
 
 require_login();
 
@@ -50,11 +41,13 @@ $renderer = $PAGE->get_renderer('local_ualmessages');
 
 echo $OUTPUT->header();
 
-if($id!=0) { 
-    echo $renderer->print_message_view_page($id);
+
+if($user_to_id==0)
+{
+    // need to redirect to contacts page to select contact
+    echo $renderer->print_create_message_contact_page(0,0,'');
 } else {
-    echo $renderer->print_message_view_history_page($user1, $user2, $history);
+    echo $renderer->print_send_message_page($user_to_id);    
 }
 
 echo $OUTPUT->footer();
-

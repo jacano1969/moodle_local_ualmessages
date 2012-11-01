@@ -26,6 +26,7 @@ $viewing = optional_param('viewing', 0, PARAM_ALPHANUMEXT);
 $page = optional_param('page', 0, PARAM_INT);
 $search = optional_param('search', '', PARAM_CLEAN);
 
+
 require_login();
 
 $context = context_user::instance($USER->id);

@@ -57,7 +57,7 @@ class local_ualmessages_renderer extends plugin_renderer_base {
         $content .= html_writer::end_tag('a');
         $content .= html_writer::end_tag('li');
         $content .= html_writer::start_tag('li', array('class'=>'compose'));
-        $content .= html_writer::start_tag('a', array('href'=>'#'));
+        $content .= html_writer::start_tag('a', array('href'=>$CFG->httpswwwroot.'/local/ualmessages/create.php'));
         $content .= get_string('composeanewmessage', 'local_ualmessages');
         $content .= html_writer::start_tag('span');
         $content .= html_writer::start_tag('i');
@@ -159,7 +159,7 @@ TEMP */
         $content .= html_writer::end_tag('a');
         $content .= html_writer::end_tag('li');
         $content .= html_writer::start_tag('li', array('class'=>'compose'));
-        $content .= html_writer::start_tag('a', array('href'=>'#'));
+        $content .= html_writer::start_tag('a', array('href'=>$CFG->httpswwwroot.'/local/ualmessages/create.php'));
         $content .= get_string('composeanewmessage', 'local_ualmessages');
         $content .= html_writer::start_tag('span');
         $content .= html_writer::start_tag('i');
@@ -181,6 +181,254 @@ TEMP */
         return $content;
     }
 
+    // choose contact to message
+    public function print_create_message_contact_page($viewing, $page, $search) {
+        
+        global $USER, $CFG, $PAGE, $OUTPUT;
+        
+        $content = html_writer::start_tag('div', array('class'=>'content messages'));
+        $content .= html_writer::start_tag('h1');
+        $content .= get_string('yourmessages', 'local_ualmessages');
+        $content .= html_writer::end_tag('h1');
+        
+        $content .= html_writer::start_tag('div', array('class'=>'in-page-controls'));
+        $content .= html_writer::start_tag('p', array('class'=>'settings'));
+        $content .= html_writer::start_tag('a', array('href'=>$CFG->httpswwwroot.'/message/edit.php?id='.$USER->id));
+        $content .= get_string('settings', 'local_ualmessages');
+        $content .= html_writer::start_tag('span');
+        $content .= html_writer::start_tag('i');
+        $content .= html_writer::end_tag('i');
+        $content .= html_writer::end_tag('span');
+        $content .= html_writer::end_tag('a');
+        $content .= html_writer::end_tag('p');
+        $content .= html_writer::end_tag('div');
+
+        // tabs
+        $content .= html_writer::start_tag('ul', array('class'=>'tabs'));
+        $content .= html_writer::start_tag('li');
+        $content .= html_writer::start_tag('a', array('href'=>$CFG->httpswwwroot.'/local/ualmessages/'));
+        $content .= get_string('recentconversations', 'local_ualmessages');
+        $content .= html_writer::end_tag('a');
+        $content .= html_writer::end_tag('li');
+        $content .= html_writer::start_tag('li');
+        $content .= html_writer::start_tag('a', array('href'=>$CFG->httpswwwroot.'/local/ualmessages/contacts.php'));
+        $content .= get_string('contacts', 'local_ualmessages');
+        $content .= html_writer::end_tag('a');
+        $content .= html_writer::end_tag('li');
+        $content .= html_writer::end_tag('ul');      
+        
+        $content .= html_writer::start_tag('p');
+        $content .= html_writer::start_tag('h2');
+        $content .= get_string('createanewmessage','local_ualmessages');
+        $content .= html_writer::end_tag('h2');
+        $content .= get_string('chooseacontact','local_ualmessages');
+        $content .= html_writer::end_tag('p');
+        
+        // filter
+        $content .= html_writer::start_tag('div', array('class'=>'filter'));
+        $content .= html_writer::start_tag('form', array('id' => 'contactsfilter','method' => 'get','action' => ''));
+        
+        // get user enrolled courses
+        $courses = enrol_get_users_courses($USER->id, true);
+        $coursecontexts = message_get_course_contexts($courses);
+        
+        if (!empty($courses)) {
+            $courses_options = array();
+    
+            foreach($courses as $course) {
+                if (has_capability('moodle/course:viewparticipants', $coursecontexts[$course->id])) {
+                    //Not using short_text() as we want the end of the course name. Not the beginning.
+                    $shortname = format_string($course->shortname, true, array('context' => $coursecontexts[$course->id]));
+                    if (textlib::strlen($shortname) > MESSAGE_MAX_COURSE_NAME_LENGTH) {
+                        $courses_options[MESSAGE_VIEW_COURSE.$course->id] = '...'.textlib::substr($shortname, -MESSAGE_MAX_COURSE_NAME_LENGTH);
+                    } else {
+                        $courses_options[MESSAGE_VIEW_COURSE.$course->id] = $shortname;
+                    }
+                }
+            }
+
+            if (!empty($courses_options)) {
+                $options[] = get_string('choosecourse','local_ualmessages');
+                $options[] = array(get_string('courses') => $courses_options);
+            }
+        }
+        
+        $content .= html_writer::start_tag('p');
+        $content .= html_writer::start_tag('label');
+        $content .= get_string('filterbycourse', 'local_ualmessages');
+        $content .= html_writer::end_tag('label');
+        $content .= html_writer::select($options, 'viewing', $viewing, false, array('id' => 'viewing','onchange' => 'this.form.submit()'));
+        $content .= html_writer::end_tag('p');
+        $content .= html_writer::end_tag('form');
+        $content .= html_writer::end_tag('div');
+                       
+        // inbox
+        $content .= html_writer::start_tag('div', array('class'=>'inbox'));
+        $content .= html_writer::start_tag('ul');
+        
+        // prepare search
+        $search = stripcslashes(clean_text(trim($search)));
+        
+        // get course participant contacts - using the filter
+        $course_id = intval(substr($viewing, 7));
+        if(!empty($course_id)) {
+            
+            $countparticipants = count_enrolled_users($coursecontexts[$course_id]);
+            $participants = get_enrolled_users($coursecontexts[$course_id], '', 0, 'u.*', '', $page*10, 10);
+            
+            $pagingbar = new paging_bar($countparticipants, $page, 10, $PAGE->url, 'page');
+            $content .= $OUTPUT->render($pagingbar);
+            
+            $content .= html_writer::start_tag('table', array('id' => 'message_participants', 'class' => 'boxaligncenter', 'cellspacing' => '2', 'cellpadding' => '0', 'border' => '0'));
+            
+            $iscontact = true;
+            $isblocked = false;
+            foreach ($participants as $participant) {
+                if ($participant->id != $USER->id) {                    
+                    $participant->messagecount = 0;
+                    
+                    $fullname  = fullname($participant);
+
+                    // check if search if used
+                    if($search!='' && stripos($fullname,$search,0)===false)
+                    {
+                        continue;
+                    } else {
+                    
+                        $fullnamelink  = $fullname;
+                    
+                        $linkclass = '';
+                        if (!empty($selecteduser) && $participant->id == $selecteduser->id) {
+                            $linkclass = 'messageselecteduser';
+                        }
+                        
+                        if ($participant->messagecount > 0 ){
+                            $fullnamelink = '<strong>'.$fullnamelink.' ('.$participant->messagecount.')</strong>';
+                        }
+                    
+                        $strcontact = $strblock = $strhistory = null;
+                        //$strcontact = message_get_contact_add_remove_link($iscontact, $isblocked, $participant);
+                        //$strblock   = message_get_contact_block_link($iscontact, $isblocked, $participant);
+                        //$strhistory = message_history_link($USER->id, $participant->id, true, '', '', 'icon');
+                        //http://localhost/moodle/message/index.php?history=1&user1=2&user2=3
+                        //$strhistory = str_replace('/message/index.php', '/local/ualmessages/view.php',$strhistory);
+        
+                        $content .= html_writer::start_tag('tr');
+                        $content .= html_writer::start_tag('td', array('class' => 'pix'));
+                        $content .= $OUTPUT->user_picture($participant, array('size' => 20, 'courseid' => SITEID));
+                        $content .= html_writer::end_tag('td');
+                    
+                        $content .= html_writer::start_tag('td', array('class' => 'contact'));
+                    
+                        /*$popupoptions = array(
+                                'height' => MESSAGE_DISCUSSION_HEIGHT,
+                                'width' => MESSAGE_DISCUSSION_WIDTH,
+                                'menubar' => false,
+                                'location' => false,
+                                'status' => true,
+                                'scrollbars' => true,
+                                'resizable' => true);*/
+                    
+                        $link = $action = null;
+                        if (!empty($selectcontacturl)) {
+                            $link = new moodle_url($selectcontacturl.'&user2='.$participant->id);
+                        } else {
+                            //can $selectcontacturl be removed and maybe the be removed and hardcoded?
+                            $link = new moodle_url("/local/ualmessages/send.php?id=$participant->id");
+                            //$action = new popup_action('click', $link, "message_$participant->id", $popupoptions);
+                        }
+                        $content .= $OUTPUT->action_link($link, $fullnamelink, $action, array('class' => $linkclass,'title' => get_string('sendmessageto', 'message', $fullname)));
+                    
+                        $content .= html_writer::end_tag('td');
+                    
+                        $content .= html_writer::tag('td', '&nbsp;'.$strcontact, array('class' => 'link'));
+                    
+                        $content .= html_writer::end_tag('tr');
+                    }
+                }
+            }
+        } else {   // get all contacts
+            
+            // find contacts
+            $countunreadtotal = message_count_unread_messages($USER);
+            $blockedusers = message_get_blocked_users($USER, '');
+            list($onlinecontacts, $offlinecontacts, $strangers) = message_get_contacts($USER, '');
+            
+            $content .= html_writer::start_tag('div', array('class' => 'contactselector mdl-align'));
+            
+            $countonlinecontacts  = count($onlinecontacts);
+            $countofflinecontacts = count($offlinecontacts);
+            $countstrangers       = count($strangers);
+            $isuserblocked = null;
+        
+            if ($countonlinecontacts + $countofflinecontacts == 0) {
+                $content .= html_writer::tag('div', get_string('contactlistempty', 'message'), array('class' => 'heading'));
+            }
+        
+            $content .= html_writer::start_tag('table', array('id' => 'message_contacts', 'class' => 'boxaligncenter'));
+        
+        
+            if($countonlinecontacts) {
+                        
+                //if (empty($titletodisplay)) {
+                    //message_print_heading(get_string('onlinecontacts', 'message', $countonlinecontacts));
+                //}
+        
+                $isuserblocked = false;
+                $isusercontact = true;
+                foreach ($onlinecontacts as $contact) {
+                    if ($contact->messagecount >= 0) {
+                        $content .= $this->get_contacts($contact, $isusercontact, $isuserblocked, $search);
+                    }
+                }
+            }
+        
+            if ($countofflinecontacts) {
+                        
+                //if (empty($titletodisplay)) {
+                    //message_print_heading(get_string('offlinecontacts', 'message', $countofflinecontacts));
+                //}
+        
+                $isuserblocked = false;
+                $isusercontact = true;
+                foreach ($offlinecontacts as $contact) {
+                    if ($contact->messagecount >= 0) {
+                        $content .= $this->get_contacts($contact, $isusercontact, $isuserblocked, $search);
+                    }
+                }
+        
+            }
+            
+            if ($countstrangers) {
+                //message_print_heading(get_string('incomingcontacts', 'message', $countstrangers));
+        
+                $isuserblocked = false;
+                $isusercontact = false;
+                foreach ($strangers as $stranger) {
+                    if ($stranger->messagecount >= 0) {
+                        $content .= $this->get_contacts($stranger, $isusercontact, $isuserblocked, $search);
+                    }
+                }
+            }
+            
+            $content .= html_writer::end_tag('table');
+        
+            if ($countstrangers && ($countonlinecontacts + $countofflinecontacts == 0)) {  // Extra help
+                $content .= html_writer::tag('div','('.get_string('addsomecontactsincoming', 'message').')',array('class' => 'note'));
+            }
+
+            $content .= html_writer::end_tag('div');
+        }
+
+        $content .= html_writer::end_tag('table');
+    
+        $content .= html_writer::end_tag('div');
+        
+        $content .= html_writer::end_tag('div');
+          
+        return $content;
+    }
+    
     
     // choose contact to message
     public function print_message_contact_page($viewing, $page, $search) {
@@ -217,7 +465,7 @@ TEMP */
         $content .= html_writer::end_tag('a');
         $content .= html_writer::end_tag('li');
         $content .= html_writer::start_tag('li', array('class'=>'compose'));
-        $content .= html_writer::start_tag('a', array('href'=>'#'));
+        $content .= html_writer::start_tag('a', array('href'=>$CFG->httpswwwroot.'/local/ualmessages/create.php'));
         $content .= get_string('composeanewmessage', 'local_ualmessages');
         $content .= html_writer::start_tag('span');
         $content .= html_writer::start_tag('i');
@@ -321,7 +569,9 @@ TEMP */
                         $strcontact = message_get_contact_add_remove_link($iscontact, $isblocked, $participant);
                         $strblock   = message_get_contact_block_link($iscontact, $isblocked, $participant);
                         $strhistory = message_history_link($USER->id, $participant->id, true, '', '', 'icon');
-                    
+                        //http://localhost/moodle/message/index.php?history=1&user1=2&user2=3
+                        $strhistory = str_replace('/message/index.php', '/local/ualmessages/view.php',$strhistory);
+        
                         $content .= html_writer::start_tag('tr');
                         $content .= html_writer::start_tag('td', array('class' => 'pix'));
                         $content .= $OUTPUT->user_picture($participant, array('size' => 20, 'courseid' => SITEID));
@@ -329,14 +579,14 @@ TEMP */
                     
                         $content .= html_writer::start_tag('td', array('class' => 'contact'));
                     
-                        $popupoptions = array(
+                        /*$popupoptions = array(
                                 'height' => MESSAGE_DISCUSSION_HEIGHT,
                                 'width' => MESSAGE_DISCUSSION_WIDTH,
                                 'menubar' => false,
                                 'location' => false,
                                 'status' => true,
                                 'scrollbars' => true,
-                                'resizable' => true);
+                                'resizable' => true);*/
                     
                         $link = $action = null;
                         if (!empty($selectcontacturl)) {
@@ -344,7 +594,7 @@ TEMP */
                         } else {
                             //can $selectcontacturl be removed and maybe the be removed and hardcoded?
                             $link = new moodle_url("/local/ualmessages/send.php?id=$participant->id");
-                            $action = new popup_action('click', $link, "message_$participant->id", $popupoptions);
+                            //$action = new popup_action('click', $link, "message_$participant->id", $popupoptions);
                         }
                         $content .= $OUTPUT->action_link($link, $fullnamelink, $action, array('class' => $linkclass,'title' => get_string('sendmessageto', 'message', $fullname)));
                     
@@ -472,7 +722,9 @@ TEMP */
         $strcontact = message_get_contact_add_remove_link($incontactlist, $isblocked, $contact);
         $strblock   = message_get_contact_block_link($incontactlist, $isblocked, $contact);
         $strhistory = message_history_link($USER->id, $contact->id, true, '', '', 'icon');
-    
+        //http://localhost/moodle/message/index.php?history=1&user1=2&user2=3
+        $strhistory = str_replace('/message/index.php', '/local/ualmessages/view.php',$strhistory);
+        
         $this_contact.= html_writer::start_tag('tr');
         $this_contact.= html_writer::start_tag('td', array('class' => 'pix'));
         $this_contact.= $OUTPUT->user_picture($contact, array('size' => 20, 'courseid' => SITEID));
@@ -480,21 +732,21 @@ TEMP */
     
         $this_contact.= html_writer::start_tag('td', array('class' => 'contact'));
     
-        $popupoptions = array(
+        /*$popupoptions = array(
                 'height' => MESSAGE_DISCUSSION_HEIGHT,
                 'width' => MESSAGE_DISCUSSION_WIDTH,
                 'menubar' => false,
                 'location' => false,
                 'status' => true,
                 'scrollbars' => true,
-                'resizable' => true);
+                'resizable' => true);*/
     
         $link = $action = null;
         if (!empty($selectcontacturl)) {
             $link = new moodle_url($selectcontacturl.'&user2='.$contact->id);
         } else {
             $link = new moodle_url("/local/ualmessages/index.php?id=$contact->id");
-            $action = new popup_action('click', $link, "message_$contact->id", $popupoptions);
+            //$action = new popup_action('click', $link, "message_$contact->id", $popupoptions);
         }
         $this_contact.= $OUTPUT->action_link($link, $fullnamelink, $action, array('class' => $linkclass,'title' => get_string('sendmessageto', 'message', $fullname)));
     
@@ -507,11 +759,129 @@ TEMP */
         return $this_contact;
     }
     
+    public function print_message_view_history_page($user1, $user2, $history) {
+        
+        global $DB;
+        
+        // get message data (unread message)
+        $msg = $DB->get_records_select('message', " useridfrom=$user1 AND useridto=$user2", null, 'timecreated', '*', 0, 1);
+           
+        if(!$msg){
+            // message might be from current user
+            $msg = $DB->get_records_select('message', " useridfrom=$user2 AND useridto=$user1", null, 'timecreated', '*', 0, 1);
+        }
+        
+        if(!$msg){        
+            // it might be an already read message
+            $msg = $DB->get_records_select('message_read', " useridfrom=$user1 AND useridto=$user2", null, 'timecreated', '*', 0, 1);
+        }
+        
+        if(!$msg){        
+            // it might be an already read message from current user
+            $msg = $DB->get_records_select('message_read', " useridfrom=$user2 AND useridto=$user1", null, 'timecreated', '*', 0, 1);
+        }
+        
+        if(!$msg)
+        {
+            return;
+        } else {
+            $message_id = 0;
+            foreach($msg as $msgid) {
+                if($message_id==0) {
+                    $message_id = $msgid->id;
+                }    
+            }
+           
+            echo $this->print_message_view_page($message_id);
+        }
+    }
     
     // create new message
-    public function print_create_message_page() {
+    public function print_send_message_page($user_id_to) {
         
-        $content = '';
+        global $USER, $CFG, $DB, $OUTPUT;
+        
+        $content = html_writer::start_tag('div', array('class'=>'content messages'));
+        $content .= html_writer::start_tag('h1');
+        $content .= get_string('yourmessages', 'local_ualmessages');
+        $content .= html_writer::end_tag('h1');
+        
+        $content .= html_writer::start_tag('div', array('class'=>'in-page-controls'));
+        $content .= html_writer::start_tag('p', array('class'=>'settings'));
+        $content .= html_writer::start_tag('a', array('href'=>$CFG->httpswwwroot.'/message/edit.php?id='.$USER->id));
+        $content .= get_string('settings', 'local_ualmessages');
+        $content .= html_writer::start_tag('span');
+        $content .= html_writer::start_tag('i');
+        $content .= html_writer::end_tag('i');
+        $content .= html_writer::end_tag('span');
+        $content .= html_writer::end_tag('a');
+        $content .= html_writer::end_tag('p');
+        $content .= html_writer::end_tag('div');
+
+        // tabs
+        $content .= html_writer::start_tag('ul', array('class'=>'tabs'));
+        $content .= html_writer::start_tag('li');
+        $content .= html_writer::start_tag('a', array('href'=>$CFG->httpswwwroot.'/local/ualmessages/'));
+        $content .= get_string('recentconversations', 'local_ualmessages');
+        $content .= html_writer::end_tag('a');
+        $content .= html_writer::end_tag('li');
+        $content .= html_writer::start_tag('li');
+        $content .= html_writer::start_tag('a', array('href'=>$CFG->httpswwwroot.'/local/ualmessages/contacts.php'));
+        $content .= get_string('contacts', 'local_ualmessages');
+        $content .= html_writer::end_tag('a');
+        $content .= html_writer::end_tag('li');
+        $content .= html_writer::end_tag('ul');      
+        
+        $content .= html_writer::start_tag('p');
+        $content .= html_writer::start_tag('h2');
+        $content .= get_string('createanewmessage','local_ualmessages');
+        $content .= html_writer::end_tag('h2');
+        $content .= html_writer::end_tag('p');
+        
+        $content .= html_writer::start_tag('p');
+        $content .= get_string('to','local_ualmessages') . ':';
+        
+        
+        // get user to 
+        $user_to = $DB->get_record('user', array('id'=>$user_id_to));
+        $user_to_pic = $OUTPUT->user_picture($user_to, array('size'=>40));
+        $user_to_user_name = $user_to->firstname . ' ' . $user_to->lastname;
+        $content .= html_writer::end_tag('p');
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        $content .= html_writer::start_tag('form', array('id' => 'messagefilter','method' => 'get','action' => 'create.php'));
+        $content .= $user_to_pic . $user_to_user_name;
+        $content .= html_writer::start_tag('input', array('type'=>'submit', 'value'=>'edit'));
+        $content .= html_writer::end_tag('form');
+        
+        
+        
+        $content .= html_writer::start_tag('form', array('name'=>'sendmessage','method'=>'post','action'=>'create.php'));
+        $content .= html_writer::empty_tag('input', array('type'=>'hidden','name'=>'userfromid','value'=>$USER->id));
+        $content .= html_writer::empty_tag('input', array('type'=>'hidden','name'=>'usertoid','value'=>$user_to->id));
+        $content .= html_writer::tag('textarea', '', array('name'=>'message','rows'=>'4', 'cols'=>'100'));
+        $content .= html_writer::empty_tag('input', array('type'=>'submit','value'=>get_string('send','local_ualmessages')));
+        $content .= html_writer::end_tag('form');
+            
+        //$content .= html_writer::start_tag('form', array('id' => 'messagefilter','method' => 'post','action' => 'create.php'));
+        //$content .= html_writer::start_tag('input', array('type'=>'hidden', 'name'=>'usertoid' 'value'=>$user_to->id));
+        
+        //$content .= html_writer::end_tag('form');
+        
+        
+        //$content .= message box
+        
+        //$content .= send button
+        
+        //check for message and send to user id
         
         echo $content;
     }
