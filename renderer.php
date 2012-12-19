@@ -97,7 +97,13 @@ class local_ualmessages_renderer extends plugin_renderer_base {
         if($read_messages) {
             $content .= $read_messages;
         }
-        
+    
+        if($unread_messages=='' && $read_messages ='') {
+            $content .= html_writer::start_tag('li');
+            $content .= get_string('nomessages','local_ualmessages');
+            $content .= html_writer::end_tag('li');
+            $content .= html_writer::end_tag('ul');
+        }
         
         $content .= html_writer::end_tag('div');
         

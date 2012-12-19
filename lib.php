@@ -98,6 +98,10 @@ function get_messages_unread($user, $msg_length, $search) {
         }
     }
     
+    if($message_count==0) {
+        $user_messages = '';
+    }
+    
     return $user_messages;
 }
 
@@ -180,6 +184,10 @@ function get_messages_read($user, $msg_length, $search) {
                   
             $message_count++;
         }
+    }
+    
+    if($message_count==0) {
+        $user_messages = '';
     }
     
     return $user_messages;

@@ -17,4 +17,6 @@ $string['choosecourse'] = 'Choose course';
 $string['createanewmessage'] = 'Create a new message';
 $string['chooseacontact'] = 'Choose a contact';
 $string['to'] = 'To';
+$string['nomessages'] = 'You have no messages';
+
 
