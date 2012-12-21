@@ -254,8 +254,8 @@ function get_recent_conversation($message_id) {
             }
             
             if($this_msg_from_user_id==$logged_in_user_id){
-                $recent_conversations .= html_writer::start_tag('li');
-                $recent_conversations .= html_writer::start_tag('p', array('class'=>'user current'));
+                $recent_conversations .= html_writer::start_tag('li', array('class'=>'current'));
+                $recent_conversations .= html_writer::start_tag('p', array('class'=>'user'));
                 $recent_conversations .= $OUTPUT->user_picture($USER, array('size'=>60));
                 $recent_conversations .= html_writer::end_tag('p');
                 $recent_conversations .= html_writer::start_tag('p', array('class'=>'excerpt'));
