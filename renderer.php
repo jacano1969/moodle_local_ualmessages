@@ -619,7 +619,7 @@ TEMP */
             $blockedusers = message_get_blocked_users($USER, '');
             list($onlinecontacts, $offlinecontacts, $strangers) = message_get_contacts($USER, '');
             
-            $content .= html_writer::start_tag('div', array('class' => 'contactselector mdl-align'));
+            //$content .= html_writer::start_tag('div', array('class' => 'contactselector mdl-align'));
             
             $countonlinecontacts  = count($onlinecontacts);
             $countofflinecontacts = count($offlinecontacts);
@@ -682,7 +682,7 @@ TEMP */
                 $content .= html_writer::tag('div','('.get_string('addsomecontactsincoming', 'message').')',array('class' => 'note'));
             }
 
-            $content .= html_writer::end_tag('div');
+            //$content .= html_writer::end_tag('div');
         }
 
         $content .= html_writer::end_tag('table');
