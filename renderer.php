@@ -360,7 +360,7 @@ TEMP */
             $blockedusers = message_get_blocked_users($USER, '');
             list($onlinecontacts, $offlinecontacts, $strangers) = message_get_contacts($USER, '');
             
-            $content .= html_writer::start_tag('div', array('class' => 'contactselector mdl-align'));
+            //$content .= html_writer::start_tag('div', array('class' => 'contactselector mdl-align'));
             
             $countonlinecontacts  = count($onlinecontacts);
             $countofflinecontacts = count($offlinecontacts);
@@ -423,7 +423,7 @@ TEMP */
                 $content .= html_writer::tag('div','('.get_string('addsomecontactsincoming', 'message').')',array('class' => 'note'));
             }
 
-            $content .= html_writer::end_tag('div');
+            //$content .= html_writer::end_tag('div');
         }
 
         $content .= html_writer::end_tag('table');
@@ -846,29 +846,17 @@ TEMP */
         
         $content .= html_writer::start_tag('p');
         $content .= get_string('to','local_ualmessages') . ':';
-        
-        
+                
         // get user to 
         $user_to = $DB->get_record('user', array('id'=>$user_id_to));
         $user_to_pic = $OUTPUT->user_picture($user_to, array('size'=>40));
         $user_to_user_name = $user_to->firstname . ' ' . $user_to->lastname;
         $content .= html_writer::end_tag('p');
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
         $content .= html_writer::start_tag('form', array('id' => 'messagefilter','method' => 'get','action' => 'create.php'));
         $content .= $user_to_pic . $user_to_user_name;
         $content .= html_writer::start_tag('input', array('type'=>'submit', 'value'=>'edit'));
         $content .= html_writer::end_tag('form');
-        
-        
         
         $content .= html_writer::start_tag('form', array('name'=>'sendmessage','method'=>'post','action'=>'create.php'));
         $content .= html_writer::empty_tag('input', array('type'=>'hidden','name'=>'userfromid','value'=>$USER->id));
