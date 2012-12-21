@@ -228,7 +228,7 @@ function get_recent_conversation($message_id) {
     // get conversation history
     if ($messages = message_get_history($USER, $msg_from_user, 10, false)) {
         
-        $recent_conversations .= html_writer::start_tag('ul');
+        $recent_conversations .= html_writer::start_tag('ul', array('class'=>'conversations'));
         
         foreach ($messages as $message) {
             

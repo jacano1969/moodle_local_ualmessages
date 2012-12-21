@@ -82,7 +82,7 @@ class local_ualmessages_renderer extends plugin_renderer_base {
                
         // inbox
         $content .= html_writer::start_tag('div', array('class'=>'inbox'));
-        $content .= html_writer::start_tag('ul');
+        $content .= html_writer::start_tag('ul', array('class'=>'messages'));
             
         // get unread messages
         $unread_messages = get_messages_unread($USER, 50, stripcslashes(clean_text(trim($search))));
