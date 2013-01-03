@@ -10,9 +10,7 @@ $PAGE->set_url('/local/ualmessages/index.php');
 
 if(!empty($_GET['search'])) {
     $search = $_GET['search'];
-} else {
-    return;
-}
+} 
 
 if(!empty($_GET['courseid'])) {
     $course_id = $_GET['courseid'];
