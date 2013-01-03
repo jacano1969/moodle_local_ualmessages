@@ -13,7 +13,7 @@ if(!empty($_GET['search'])) {
     return;
 }
 
-if(!empty($_GET['courseid']) {
+if(!empty($_GET['courseid'])) {
     $course_id = $_GET['courseid'];
 }
 
