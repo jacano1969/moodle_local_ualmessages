@@ -1,11 +1,10 @@
 <?php
 
-//require('../../config.php');
-//require('lib.php');
+require('../../config.php');
+require('lib.php');
 
-
-//$PAGE->set_context($context);
-//$PAGE->set_url('/local/ualmessages/index.php');
+$PAGE->set_context($context);
+$PAGE->set_url('/local/ualmessages/index.php');
 
 if(!empty($_GET['search'])) {
     $search = $_GET['search'];
@@ -17,9 +16,6 @@ if(!empty($_GET['courseid'])) {
     $course_id = $_GET['courseid'];
 }
 
-echo $search . $courseid;
-
-exit;
     // prepare search
     $search = stripcslashes(clean_text(trim($search)));
         
@@ -32,7 +28,7 @@ exit;
         $pagingbar = new paging_bar($countparticipants, $page, 50, $PAGE->url, 'page');
         $content .= $OUTPUT->render($pagingbar);
         
-        $content .= html_writer::start_tag('table', array('id' => 'message_participants', 'class' => 'boxaligncenter', 'cellspacing' => '2', 'cellpadding' => '0', 'border' => '0'));
+        //$content .= html_writer::start_tag('table', array('id' => 'message_participants', 'class' => 'boxaligncenter', 'cellspacing' => '2', 'cellpadding' => '0', 'border' => '0'));
         
         $iscontact = true;
         $isblocked = false;
@@ -164,7 +160,7 @@ exit;
             }
         }
         
-        $content .= html_writer::end_tag('table');
+        //$content .= html_writer::end_tag('table');
     
         if ($countstrangers && ($countonlinecontacts + $countofflinecontacts == 0)) {  // Extra help
             $content .= html_writer::tag('div','('.get_string('addsomecontactsincoming', 'message').')',array('class' => 'note'));
@@ -173,11 +169,11 @@ exit;
         //$content .= html_writer::end_tag('div');
     }
 
-    $content .= html_writer::end_tag('table');
+    //$content .= html_writer::end_tag('table');
 
-    $content .= html_writer::end_tag('div');
+    //$content .= html_writer::end_tag('div');
     
-    $content .= html_writer::end_tag('div');
+    //$content .= html_writer::end_tag('div');
       
-    return $content;
+    echo $content;
 
