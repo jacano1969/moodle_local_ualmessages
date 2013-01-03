@@ -1,7 +1,7 @@
 <?php
 
-require('../../config.php');
-require('lib.php');
+//require('../../config.php');
+//require('lib.php');
 
 
 //$PAGE->set_context($context);
@@ -17,8 +17,9 @@ if(!empty($_GET['courseid']) {
     $course_id = $_GET['courseid'];
 }
 
-return $search . $courseid;
+echo $search . $courseid;
 
+exit;
     // prepare search
     $search = stripcslashes(clean_text(trim($search)));
         
