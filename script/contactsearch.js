@@ -6,7 +6,7 @@ var ualmessagescode = ualmessagescode || (function(){
 
     $("#msgsearchname").live("keypress", function() {
         
-        var searchText = this.val();
+        var searchText = $(this).val();
         var courseId = $('#viewing').val();
         
         $.get("contactsearch.php", {courseid: courseId, search : searchText}, function(data){
