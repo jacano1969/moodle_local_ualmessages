@@ -16,6 +16,7 @@ if(!empty($_GET['courseid'])) {
     $course_id = $_GET['courseid'];
 }
 
+$page=0;
 
     // get all courses for user
     $courses = enrol_get_users_courses($USER->id, true);
