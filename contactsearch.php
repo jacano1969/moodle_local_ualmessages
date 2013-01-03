@@ -16,6 +16,11 @@ if(!empty($_GET['courseid'])) {
     $course_id = $_GET['courseid'];
 }
 
+
+    // get all courses for user
+    $courses = enrol_get_users_courses($USER->id, true);
+    $coursecontexts = message_get_course_contexts($courses);
+        
     // prepare search
     $search = stripcslashes(clean_text(trim($search)));
         
