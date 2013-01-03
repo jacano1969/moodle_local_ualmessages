@@ -137,7 +137,7 @@ $content ='';
             $isusercontact = true;
             foreach ($onlinecontacts as $contact) {
                 if ($contact->messagecount >= 0) {
-                    $content .= $this->get_contacts($contact, $isusercontact, $isuserblocked, $search);
+                    $content .= get_contactsearch_contacts($contact, $isusercontact, $isuserblocked, $search);
                 }
             }
         }
@@ -152,7 +152,7 @@ $content ='';
             $isusercontact = true;
             foreach ($offlinecontacts as $contact) {
                 if ($contact->messagecount >= 0) {
-                    $content .= $this->get_contacts($contact, $isusercontact, $isuserblocked, $search);
+                    $content .= get_contactsearch_contacts($contact, $isusercontact, $isuserblocked, $search);
                 }
             }
     
@@ -165,7 +165,7 @@ $content ='';
             $isusercontact = false;
             foreach ($strangers as $stranger) {
                 if ($stranger->messagecount >= 0) {
-                    $content .= $this->get_contacts($stranger, $isusercontact, $isuserblocked, $search);
+                    $content .= get_contactsearch_contacts($stranger, $isusercontact, $isuserblocked, $search);
                 }
             }
         }
