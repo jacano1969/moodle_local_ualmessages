@@ -171,9 +171,9 @@ if(!empty($_GET['courseid'])) {
         
         //$content .= html_writer::end_tag('table');
     
-        if ($countstrangers && ($countonlinecontacts + $countofflinecontacts == 0)) {  // Extra help
-            $content .= html_writer::tag('div','('.get_string('addsomecontactsincoming', 'message').')',array('class' => 'note'));
-        }
+        //if ($countstrangers && ($countonlinecontacts + $countofflinecontacts == 0)) {  // Extra help
+        //    $content .= html_writer::tag('div','('.get_string('addsomecontactsincoming', 'message').')',array('class' => 'note'));
+        //}
 
         //$content .= html_writer::end_tag('div');
     }
