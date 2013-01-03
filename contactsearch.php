@@ -4,8 +4,8 @@ require('../../config.php');
 require('lib.php');
 
 
-$PAGE->set_context($context);
-$PAGE->set_url('/local/ualmessages/index.php');
+//$PAGE->set_context($context);
+//$PAGE->set_url('/local/ualmessages/index.php');
 
 if(!empty($_GET['search'])) {
     $search = $_GET['search'];
