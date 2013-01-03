@@ -48,7 +48,7 @@ $PAGE->set_heading($strtitle);
 $PAGE->navbar->add($strtitle);
 #$PAGE->requires->js_init_call('M.local_messaging.init');
 
-$js = new moodle_url(CFG->httpswwwroot."local/ualmessages/script/contactsearch.js");
+$js = new moodle_url($CFG->httpswwwroot."/local/ualmessages/script/contactsearch.js");
 $PAGE->requires->js($js, true);
 
 $renderer = $PAGE->get_renderer('local_ualmessages');
