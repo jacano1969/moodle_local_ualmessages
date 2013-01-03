@@ -19,7 +19,7 @@ if(!empty($_GET['courseid'])) {
 }
 
 $page=0;
-
+$content ='';
     // get all courses for user
     $courses = enrol_get_users_courses($USER->id, true);
     $coursecontexts = message_get_course_contexts($courses);
