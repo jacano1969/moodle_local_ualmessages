@@ -10,7 +10,15 @@ var ualmessagescode = ualmessagescode || (function(){
         var courseId = $('#viewing').val();
         
         $.get("contactsearch.php", {'courseid': courseId, 'search': searchText}, function(data){
-            $('#message_participants').html(data);
+            
+            if($('#message_participants').length>0){
+                $('#message_participants').html(data);
+            }
+            
+            if($('#message_contacts').length>0){
+                $('#message_contacts').html(data);
+            }
+            
         });
         
     });
