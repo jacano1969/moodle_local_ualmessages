@@ -16,6 +16,8 @@ if(!empty($_GET['search'])) {
 
 if(!empty($_GET['courseid'])) {
     $course_id = $_GET['courseid'];
+} else {
+    $course_id = '';
 }
 
 $page=0;
