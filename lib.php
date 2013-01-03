@@ -399,7 +399,7 @@ function get_contactsearch_contacts($contact, $incontactlist, $isblocked, $searc
     return $this_contact;
 }
 
-public function print_message_view_history_page($user1, $user2, $history) {
+function print_message_view_history_page($user1, $user2, $history) {
     
     global $DB;
     
