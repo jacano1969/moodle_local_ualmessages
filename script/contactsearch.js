@@ -4,7 +4,7 @@ var ualmessagescode = ualmessagescode || (function(){
    
     "use strict";
 
-    $("#msgsearchname").live("keypress", function() {
+    $("#msgsearchname").live("keyup", function() {
         
         var searchText = $(this).val();
         var courseId = $('#viewing').val();
