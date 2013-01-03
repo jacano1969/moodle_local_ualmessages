@@ -3,6 +3,8 @@
 require('../../config.php');
 require('lib.php');
 
+$context = context_user::instance($USER->id);
+
 $PAGE->set_context($context);
 $PAGE->set_url('/local/ualmessages/index.php');
 
