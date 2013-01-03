@@ -265,6 +265,7 @@ TEMP */
         $content .= html_writer::end_tag('label');
         $content .= html_writer::select($options, 'viewing', $viewing, false, array('id' => 'viewing','onchange' => 'this.form.submit()'));
         $content .= html_writer::end_tag('p');
+        $content .= html_writer::tag('input', '', array('type'=>'text', 'id'=>'msgsearchname', 'name'=>'msgsearchname'));
         $content .= html_writer::end_tag('form');
         $content .= html_writer::end_tag('div');
                        
