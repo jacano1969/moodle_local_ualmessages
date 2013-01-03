@@ -9,7 +9,7 @@ var ualmessagescode = ualmessagescode || (function(){
         var searchText = $(this).val();
         var courseId = $('#viewing').val();
         
-        $.get("http://test.ualmoodle.wf.ulcc.ac.uk/local/ualmessages/contactsearch.php", {courseid: courseId, search : searchText}, function(data){
+        $.get("contactsearch.php", {'courseid': courseId, 'search': searchText}, function(data){
             $('#message_participants').html(data);
         });
         
