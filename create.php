@@ -48,6 +48,8 @@ $PAGE->set_heading($strtitle);
 $PAGE->navbar->add($strtitle);
 #$PAGE->requires->js_init_call('M.local_messaging.init');
 
+$PAGE->requires->js('script/contactsearch.js', true);
+
 $renderer = $PAGE->get_renderer('local_ualmessages');
 
 if($message!=''){
