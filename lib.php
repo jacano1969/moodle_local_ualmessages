@@ -308,6 +308,9 @@ function get_recent_conversation($message_id) {
             $recent_conversations .= html_writer::empty_tag('input', array('type'=>'hidden','name'=>'usertoid','value'=>$msg_from_user_id));
             $recent_conversations .= html_writer::empty_tag('input', array('type'=>'hidden','name'=>'userfromid','value'=>$USER->id));
             $recent_conversations .= html_writer::empty_tag('input', array('type'=>'hidden','name'=>'id','value'=>$message_id));
+            $recent_conversations .= html_writer::start_tag('label');
+            $recent_conversations .= get_string('yourmessage','local_ualmessages');
+            $recent_conversations .= html_writer::end_tag('label');
             $recent_conversations .= html_writer::tag('textarea', '', array('name'=>'message','rows'=>'4', 'cols'=>'100'));
             $recent_conversations .= html_writer::empty_tag('input', array('type'=>'submit','value'=>get_string('send','local_ualmessages')));
             $recent_conversations .= html_writer::end_tag('form');
