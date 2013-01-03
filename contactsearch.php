@@ -8,18 +8,19 @@ $context = context_user::instance($USER->id);
 $PAGE->set_context($context);
 $PAGE->set_url('/local/ualmessages/index.php');
 
+$search='';
+$course_id = '';
+$page=0;
+$content ='';
+
 if(!empty($_GET['search'])) {
     $search = $_GET['search'];
 } 
 
 if(!empty($_GET['courseid'])) {
     $course_id = $_GET['courseid'];
-} else {
-    $course_id = '';
 }
 
-$page=0;
-$content ='';
     // get all courses for user
     $courses = enrol_get_users_courses($USER->id, true);
     $coursecontexts = message_get_course_contexts($courses);
