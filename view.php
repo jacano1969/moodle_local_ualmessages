@@ -53,7 +53,7 @@ echo $OUTPUT->header();
 if($id!=0) { 
     echo $renderer->print_message_view_page($id);
 } else {
-    echo $renderer->print_message_view_history_page($user1, $user2, $history);
+    echo $renderer->print_message_view_history_page($user2, $user1, $history);
 }
 
 echo $OUTPUT->footer();
