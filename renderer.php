@@ -348,7 +348,8 @@ TEMP */
                     
                         $content .= html_writer::end_tag('td');
                     
-                        $content .= html_writer::tag('td', '&nbsp;'.$strcontact, array('class' => 'link'));
+                        //$content .= html_writer::tag('td', '&nbsp;'.$strcontact, array('class' => 'link'));
+                        $content .= html_writer::tag('td', $strcontact, array('class' => 'link'));
                     
                         $content .= html_writer::end_tag('tr');
                     }
@@ -609,7 +610,8 @@ TEMP */
                     
                         $content .= html_writer::end_tag('td');
                     
-                        $content .= html_writer::tag('td', '&nbsp;'.$strcontact.$strblock.'&nbsp;'.$strhistory, array('class' => 'link'));
+                        //$content .= html_writer::tag('td', '&nbsp;'.$strcontact.$strblock.'&nbsp;'.$strhistory, array('class' => 'link'));
+                        $content .= html_writer::tag('td', $strcontact.$strblock.'&nbsp;'.$strhistory, array('class' => 'link'));
                     
                         $content .= html_writer::end_tag('tr');
                     }
@@ -767,7 +769,8 @@ TEMP */
     
         $this_contact.= html_writer::end_tag('td');
     
-        $this_contact.= html_writer::tag('td', '&nbsp;'.$strcontact.$strblock.'&nbsp;'.$strhistory, array('class' => 'link'));
+        //$this_contact.= html_writer::tag('td', '&nbsp;'.$strcontact.$strblock.'&nbsp;'.$strhistory, array('class' => 'link'));
+        $this_contact.= html_writer::tag('td', $strcontact.$strblock.'&nbsp;'.$strhistory, array('class' => 'link'));
     
         $this_contact.= html_writer::end_tag('tr');
         
