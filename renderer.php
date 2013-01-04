@@ -348,8 +348,7 @@ TEMP */
                     
                         $content .= html_writer::end_tag('td');
                     
-                        //$content .= html_writer::tag('td', '&nbsp;'.$strcontact, array('class' => 'link'));
-                        $content .= html_writer::tag('td', $strcontact, array('class' => 'link'));
+                        $content .= html_writer::tag('td', '&nbsp;'.$strcontact, array('class' => 'link'));
                     
                         $content .= html_writer::end_tag('tr');
                     }
@@ -575,9 +574,9 @@ TEMP */
                     
                         $strcontact = $strblock = $strhistory = null;
                         $strcontact = message_get_contact_add_remove_link($iscontact, $isblocked, $participant);
-                        $strcontact = str_replace('.php&','.php?',$strcontact);
+                        $strcontact = str_replace('.php&amp;','.php?',$strcontact);
                         $strblock   = message_get_contact_block_link($iscontact, $isblocked, $participant);
-                        $strblock = str_replace('.php&','.php?',$strblock);
+                        $strblock = str_replace('.php&amp;','.php?',$strblock);
                         $strhistory = message_history_link($USER->id, $participant->id, true, '', '', 'icon');
                         //http://localhost/moodle/message/index.php?history=1&user1=2&user2=3
                         $strhistory = str_replace('/message/index.php', '/local/ualmessages/view.php',$strhistory);
@@ -610,8 +609,7 @@ TEMP */
                     
                         $content .= html_writer::end_tag('td');
                     
-                        //$content .= html_writer::tag('td', '&nbsp;'.$strcontact.$strblock.'&nbsp;'.$strhistory, array('class' => 'link'));
-                        $content .= html_writer::tag('td', $strcontact.$strblock.'&nbsp;'.$strhistory, array('class' => 'link'));
+                        $content .= html_writer::tag('td', '&nbsp;'.$strcontact.$strblock.'&nbsp;'.$strhistory, array('class' => 'link'));
                     
                         $content .= html_writer::end_tag('tr');
                     }
@@ -735,9 +733,9 @@ TEMP */
         $strcontact = $strblock = $strhistory = null;
     
         $strcontact = message_get_contact_add_remove_link($incontactlist, $isblocked, $contact);
-        $strcontact = str_replace('.php&','.php?',$strcontact);
+        $strcontact = str_replace('.php&amp;','.php?',$strcontact);
         $strblock   = message_get_contact_block_link($incontactlist, $isblocked, $contact);
-        $strblock = str_replace('.php&','.php?',$strblock);
+        $strblock = str_replace('.php&amp;','.php?',$strblock);
         $strhistory = message_history_link($USER->id, $contact->id, true, '', '', 'icon');
         //http://localhost/moodle/message/index.php?history=1&user1=2&user2=3
         $strhistory = str_replace('/message/index.php', '/local/ualmessages/view.php',$strhistory);
@@ -769,8 +767,7 @@ TEMP */
     
         $this_contact.= html_writer::end_tag('td');
     
-        //$this_contact.= html_writer::tag('td', '&nbsp;'.$strcontact.$strblock.'&nbsp;'.$strhistory, array('class' => 'link'));
-        $this_contact.= html_writer::tag('td', $strcontact.$strblock.'&nbsp;'.$strhistory, array('class' => 'link'));
+        $this_contact.= html_writer::tag('td', '&nbsp;'.$strcontact.$strblock.'&nbsp;'.$strhistory, array('class' => 'link'));
     
         $this_contact.= html_writer::end_tag('tr');
         
