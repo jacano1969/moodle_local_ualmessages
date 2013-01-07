@@ -56,6 +56,8 @@ $js_include = new moodle_url($CFG->httpswwwroot."/local/ualmessages/script/jquer
 $PAGE->requires->js($js_include, true);
 $js_include = new moodle_url($CFG->httpswwwroot."/local/ualmessages/script/contactsearch.js");
 $PAGE->requires->js($js_include, true);
+$js_include = new moodle_url($CFG->httpswwwroot."/local/ualmessages/script/viewpaging.js");
+$PAGE->requires->js($js_include, true);
 
 $renderer = $PAGE->get_renderer('local_ualmessages');
 
