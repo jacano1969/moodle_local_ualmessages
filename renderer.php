@@ -542,7 +542,10 @@ TEMP */
             $countparticipants = count_enrolled_users($coursecontexts[$course_id]);
             $participants = get_enrolled_users($coursecontexts[$course_id], '', 0, 'u.*', '', $page*10, 10);
             
-            $pagingbar = new paging_bar($countparticipants, $page, 10, $PAGE->url, 'page');
+            $pageLink=$CFG->httpswwwroot.'/local/ualmessages/contacts.php?search=&viewing=course_'.$course_id . '&page='
+            
+            //$pagingbar = new paging_bar($countparticipants, $page, 50, $PAGE->url, 'page');
+            $pagingbar = new paging_bar($countparticipants, $page, 50, $pageLink, 'page');
             $content .= $OUTPUT->render($pagingbar);
             
             $content .= html_writer::start_tag('table', array('id' => 'message_participants', 'class' => 'boxaligncenter', 'cellspacing' => '2', 'cellpadding' => '0', 'border' => '0'));
