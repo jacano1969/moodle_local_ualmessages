@@ -227,7 +227,10 @@ TEMP */
         $content .= html_writer::start_tag('h2');
         $content .= get_string('createanewmessage','local_ualmessages');
         $content .= html_writer::end_tag('h2');
-        $content .= get_string('chooseacontact','local_ualmessages');
+        //$content .= get_string('chooseacontact','local_ualmessages');
+        $content .= get_string('chooseacontacttosend','local_ualmessages');
+        $content .= '<br>';
+        $content .= get_string('selectgroupchoosecontact','local_ualmessages').'...';
         $content .= html_writer::end_tag('p');
         
         // filter
@@ -852,12 +855,12 @@ TEMP */
         
         $content .= html_writer::start_tag('p');
         $content .= html_writer::start_tag('h2');
-        $content .= get_string('createanewmessage','local_ualmessages');
+        $content .= get_string('createanewmessagefor','local_ualmessages'). ':';
         $content .= html_writer::end_tag('h2');
         $content .= html_writer::end_tag('p');
         
         $content .= html_writer::start_tag('p');
-        $content .= get_string('to','local_ualmessages') . ':';
+        //$content .= get_string('to','local_ualmessages') . ':';
                 
         // get user to 
         $user_to = $DB->get_record('user', array('id'=>$user_id_to));

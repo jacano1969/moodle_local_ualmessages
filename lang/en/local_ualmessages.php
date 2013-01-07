@@ -19,4 +19,7 @@ $string['chooseacontact'] = 'Choose a contact';
 $string['to'] = 'To';
 $string['nomessages'] = 'You have no messages';
 $string['yourmessage'] = 'Your message...';
+$string['createanewmessagefor'] = 'Create a new message for';
+$string['chooseacontacttosend'] = 'You can send a message to anyone within your course groups.';
+$string['selectgroupchoosecontact'] = 'Select a group then choose a contact';
 
