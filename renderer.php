@@ -288,8 +288,8 @@ TEMP */
             $countparticipants = count_enrolled_users($coursecontexts[$course_id]);
             $participants = get_enrolled_users($coursecontexts[$course_id], '', 0, 'u.*', '', $page*50, 50);
             
-            //$pagingbar = new paging_bar($countparticipants, $page, 50, $PAGE->url, 'page');
-            //$content .= $OUTPUT->render($pagingbar);
+            $pagingbar = new paging_bar($countparticipants, $page, 50, $PAGE->url, 'page');
+            $content .= $OUTPUT->render($pagingbar);
             
             $content .= html_writer::start_tag('table', array('id' => 'message_participants', 'class' => 'boxaligncenter', 'cellspacing' => '2', 'cellpadding' => '0', 'border' => '0'));
             
@@ -545,7 +545,7 @@ TEMP */
         if(!empty($course_id)) {
             
             $countparticipants = count_enrolled_users($coursecontexts[$course_id]);
-            $participants = get_enrolled_users($coursecontexts[$course_id], '', 0, 'u.*', '', $page*10, 10);
+            $participants = get_enrolled_users($coursecontexts[$course_id], '', 0, 'u.*', '', $page*50, 50);
             
             //$pageLink='/local/ualmessages/contacts.php?search=&viewing=course_'.$course_id;
             
