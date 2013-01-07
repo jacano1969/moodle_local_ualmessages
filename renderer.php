@@ -268,6 +268,7 @@ TEMP */
         $content .= get_string('filterbycourse', 'local_ualmessages');
         $content .= html_writer::end_tag('label');
         $content .= html_writer::select($options, 'viewing', $viewing, false, array('id' => 'viewing', 'name'=>'viewing', 'onchange' => 'this.form.submit()'));
+        $content .= '<br>';
         $content .= html_writer::tag('input', '', array('type'=>'text', 'class'=>'nolabel' ,'id'=>'msgsearchname', 'name'=>'msgsearchname'));
         $content .= html_writer::end_tag('p');
         //$content .= html_writer::end_tag('form');
