@@ -234,8 +234,9 @@ TEMP */
         $content .= html_writer::end_tag('p');
         
         // filter
-        $content .= html_writer::start_tag('div', array('class'=>'filter'));
         $content .= html_writer::start_tag('form', array('id' => 'contactsfilter','method' => 'get','action' => ''));
+        $content .= html_writer::start_tag('div', array('class'=>'filter'));
+        
         
         // get user enrolled courses
         $courses = enrol_get_users_courses($USER->id, true);
