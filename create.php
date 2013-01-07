@@ -30,9 +30,9 @@ $user_from_id = 0;
 $user_to_id = 0;
 
 
-if(isset($_POST['viewing'])) {
-    $viewing = $_POST['viewing'];
-}
+//if(isset($_POST['viewing'])) {
+//    $viewing = $_POST['viewing'];
+//}
 
 if(isset($_POST['message'])) {
     $message = $_POST['message'];
