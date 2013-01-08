@@ -872,7 +872,7 @@ TEMP */
         
         $content .= html_writer::start_tag('form', array('id' => 'messagefilter','method' => 'get','action' => 'create.php'));
         $content .= $user_to_pic . $user_to_user_name;
-        $content .= html_writer::start_tag('input', array('type'=>'submit', 'value'=>'edit'));
+        $content .= html_writer::start_tag('input', array('type'=>'submit', 'value'=>'Swap contact'));
         $content .= html_writer::end_tag('form');
         
         $content .= html_writer::start_tag('form', array('name'=>'sendmessage','method'=>'post','action'=>'create.php'));
