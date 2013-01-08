@@ -31,7 +31,7 @@ $context = context_user::instance($USER->id);
 $strtitle = get_string('pluginname', 'local_ualmessages');
 
 $PAGE->set_context($context);
-$PAGE->set_url('/local/ualmessages/index.php');
+$PAGE->set_url('/local/ualmessages/send.php');
 $PAGE->set_title($strtitle);
 $PAGE->set_heading($strtitle);
 $PAGE->navbar->add($strtitle);
