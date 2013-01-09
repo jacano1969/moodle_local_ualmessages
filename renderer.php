@@ -71,9 +71,9 @@ class local_ualmessages_renderer extends plugin_renderer_base {
         $content .= html_writer::start_tag('div', array('class'=>'filter'));
         $content .= html_writer::start_tag('form', array('id' => 'messagefilter','method' => 'get','action' => 'index.php'));
         $content .= html_writer::start_tag('p');
-        $content .= html_writer::start_tag('label');
-        $content .= get_string('searchmessages', 'local_ualmessages');
-        $content .= html_writer::end_tag('label');
+        //$content .= html_writer::start_tag('label');
+        //$content .= get_string('searchmessages', 'local_ualmessages');
+        //$content .= html_writer::end_tag('label');
         $content .= html_writer::start_tag('input', array('name'=>'search', 'value'=> ($search=='') ? get_string('enterasearchterm', 'local_ualmessages') : $search,'class'=>'text','onclick'=>'this.form.search.value=\'\';'));
         $content .= html_writer::start_tag('input', array('type'=>'submit','name'=>'','value'=>get_string('search', 'local_ualmessages'),'class'=>'submit', 'onclick'=>'if(this.form.search.value==\'\' || this.form.search.value==\''.get_string('enterasearchterm', 'local_ualmessages').'\'){return false;}'));  
         $content .= html_writer::end_tag('form');
