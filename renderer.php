@@ -223,7 +223,7 @@ TEMP */
         $content .= html_writer::end_tag('li');
         $content .= html_writer::end_tag('ul');      
         
-        $content .= html_writer::start_tag('p');
+        //$content .= html_writer::start_tag('p');
         $content .= html_writer::start_tag('h2');
         $content .= get_string('createanewmessage','local_ualmessages');
         $content .= html_writer::end_tag('h2');
@@ -231,7 +231,7 @@ TEMP */
         $content .= get_string('chooseacontacttosend','local_ualmessages');
         $content .= '<br>';
         $content .= get_string('selectgroupchoosecontact','local_ualmessages').'...';
-        $content .= html_writer::end_tag('p');
+        //$content .= html_writer::end_tag('p');
         
         // filter
         $content .= html_writer::start_tag('form', array('id' => 'contactsfilter','method' => 'get','action' => ''));
