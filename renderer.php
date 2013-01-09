@@ -875,7 +875,7 @@ TEMP */
         $content .= html_writer::start_tag('input', array('type'=>'submit', 'value'=>'Swap contact'));
         $content .= html_writer::end_tag('form');
         
-        $content .= html_writer::start_tag('form', array('name'=>'sendmessage','method'=>'post','action'=>'create.php'));
+        $content .= html_writer::start_tag('form', array('id'=>'message-form','name'=>'sendmessage','method'=>'post','action'=>'create.php'));
         $content .= html_writer::empty_tag('input', array('type'=>'hidden','name'=>'userfromid','value'=>$USER->id));
         $content .= html_writer::empty_tag('input', array('type'=>'hidden','name'=>'usertoid','value'=>$user_to->id));
         $content .= html_writer::start_tag('label');
