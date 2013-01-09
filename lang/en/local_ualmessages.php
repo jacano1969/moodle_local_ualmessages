@@ -22,4 +22,4 @@ $string['yourmessage'] = 'Your message...';
 $string['createanewmessagefor'] = 'Create a new message for';
 $string['chooseacontacttosend'] = 'You can send a message to anyone within your course groups.';
 $string['selectgroupchoosecontact'] = 'Select a group then choose a contact';
-$strin['contactlistempty'] = 'You have no saved contacts';
+$string['contactlistempty'] = 'You have no saved contacts';
