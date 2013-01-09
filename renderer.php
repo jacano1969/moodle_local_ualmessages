@@ -276,6 +276,28 @@ TEMP */
         $content .= html_writer::end_tag('p');
         //$content .= html_writer::end_tag('form');
         $content .= html_writer::end_tag('div');
+               
+               
+               
+               
+               
+               
+               
+        // SAVED CONTACTS       
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
                        
         // inbox
         $content .= html_writer::start_tag('div', array('class'=>'inbox'));
@@ -366,6 +388,9 @@ TEMP */
                     }
                 }
             }
+            
+            $content .= html_writer::end_tag('table');
+            
         } else {   // get all contacts
             
             $content .= html_writer::start_tag('h2');
@@ -442,8 +467,6 @@ TEMP */
 
             //$content .= html_writer::end_tag('div');
         }
-
-        $content .= html_writer::end_tag('table');
     
         $content .= html_writer::end_tag('div');
         $content .= html_writer::end_tag('form');
