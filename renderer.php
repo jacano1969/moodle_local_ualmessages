@@ -834,7 +834,7 @@ TEMP */
         $strblock = str_replace('.php&amp;','.php?',$strblock);
         $strhistory = message_history_link($USER->id, $contact->id, true, '', '', 'icon');
         //http://localhost/moodle/message/index.php?history=1&user1=2&user2=3
-        $strhistory = str_replace('/message/index.php', '/local/ualmessages/send.php',$strhistory);
+        $strhistory = str_replace('/message/index.php', '/local/ualmessages/view.php',$strhistory);
         
         $this_contact.= html_writer::start_tag('tr');
         $this_contact.= html_writer::start_tag('td', array('class' => 'pix'));
@@ -856,7 +856,7 @@ TEMP */
         if (!empty($selectcontacturl)) {
             $link = new moodle_url($selectcontacturl.'&user2='.$contact->id);
         } else {
-            $link = new moodle_url("/local/ualmessages/view.php?id=$contact->id");
+            $link = new moodle_url("/local/ualmessages/send.php?id=$contact->id");
             //$action = new popup_action('click', $link, "message_$contact->id", $popupoptions);
         }
         $this_contact.= $OUTPUT->action_link($link, $fullnamelink, $action, array('class' => $linkclass,'title' => get_string('sendmessageto', 'message', $fullname)));
