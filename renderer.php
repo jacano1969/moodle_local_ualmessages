@@ -490,14 +490,6 @@ TEMP */
         // filter
         $content .= html_writer::start_tag('div', array('class'=>'filter'));
         $content .= html_writer::start_tag('form', array('id' => 'contactsfilter','method' => 'get','action' => ''));
-        $content .= html_writer::start_tag('p');
-        $content .= html_writer::start_tag('label');
-        $content .= get_string('searchcontacts', 'local_ualmessages');
-        $content .= html_writer::end_tag('label');
-        
-        $content .= html_writer::start_tag('input', array('name'=>'search', 'value'=> ($search=='') ? get_string('searchcontacts', 'local_ualmessages') : $search,'class'=>'text','onclick'=>'this.form.search.value=\'\';'));
-        $content .= html_writer::start_tag('input', array('type'=>'submit','name'=>'','value'=>get_string('search', 'local_ualmessages'),'class'=>'submit','onclick'=>'if(this.form.search.value==\'\' || this.form.search.value==\''.get_string('searchcontacts', 'local_ualmessages').'\'){return false;}'));  
-        $content .= html_writer::end_tag('p');
         
         // get user enrolled courses
         $courses = enrol_get_users_courses($USER->id, true);
@@ -529,6 +521,14 @@ TEMP */
         $content .= get_string('filterbycourse', 'local_ualmessages');
         $content .= html_writer::end_tag('label');
         $content .= html_writer::select($options, 'viewing', $viewing, false, array('id' => 'viewing','onchange' => 'this.form.search.value=\'\';this.form.submit()'));
+        $content .= html_writer::end_tag('p');
+        $content .= html_writer::start_tag('p');
+        $content .= html_writer::start_tag('label');
+        $content .= get_string('searchcontacts', 'local_ualmessages');
+        $content .= html_writer::end_tag('label');
+        
+        $content .= html_writer::start_tag('input', array('name'=>'search', 'value'=> ($search=='') ? get_string('searchcontacts', 'local_ualmessages') : $search,'class'=>'text','onclick'=>'this.form.search.value=\'\';'));
+        $content .= html_writer::start_tag('input', array('type'=>'submit','name'=>'','value'=>get_string('search', 'local_ualmessages'),'class'=>'submit','onclick'=>'if(this.form.search.value==\'\' || this.form.search.value==\''.get_string('searchcontacts', 'local_ualmessages').'\'){return false;}'));  
         $content .= html_writer::end_tag('p');
         $content .= html_writer::end_tag('form');
         $content .= html_writer::end_tag('div');
