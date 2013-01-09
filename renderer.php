@@ -782,7 +782,7 @@ TEMP */
         if (!empty($selectcontacturl)) {
             $link = new moodle_url($selectcontacturl.'&user2='.$contact->id);
         } else {
-            $link = new moodle_url("/local/ualmessages/index.php?id=$contact->id");
+            $link = new moodle_url("/local/ualmessages/view.php?id=$contact->id");
             //$action = new popup_action('click', $link, "message_$contact->id", $popupoptions);
         }
         $this_contact.= $OUTPUT->action_link($link, $fullnamelink, $action, array('class' => $linkclass,'title' => get_string('sendmessageto', 'message', $fullname)));
