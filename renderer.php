@@ -374,7 +374,7 @@ TEMP */
             $isuserblocked = null;
         
             if ($countonlinecontacts + $countofflinecontacts == 0) {
-                $content .= html_writer::tag('div', get_string('contactlistempty', 'message'), array('class' => 'heading'));
+                $content .= html_writer::tag('div', get_string('contactlistempty', 'local_ualmessages'), array('class' => 'heading'));
             }
         
             $content .= html_writer::start_tag('table', array('id' => 'message_contacts', 'class' => 'boxaligncenter'));
@@ -640,7 +640,7 @@ TEMP */
             if ($countonlinecontacts + $countofflinecontacts == 0) {
                 $content .= html_writer::start_tag('ul');
                 $content .= html_writer::start_tag('li');
-                $content .= get_string('contactlistempty', 'message');
+                $content .= get_string('contactlistempty', 'local_ualmessages');
                 $content .= html_writer::end_tag('li');
                 $content .= html_writer::end_tag('ul');
             }
