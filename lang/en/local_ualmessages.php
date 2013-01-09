@@ -24,4 +24,8 @@ $string['chooseacontacttosend'] = 'You can send a message to anyone within your 
 $string['selectgroupchoosecontact'] = 'Select a group then choose a contact';
 $string['contactlistempty'] = 'You have no saved contacts';
 $string['yoursavedcontacts'] = 'Your saved contacts';
+$string['savedandrecent'] = 'Saved and recent';
+$string['searchthislist'] = 'Search this list';
+$string['savedcontacts'] = 'Saved contacts';
+$string['recent'] = 'Recent';
 

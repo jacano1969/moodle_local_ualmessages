@@ -258,7 +258,7 @@ TEMP */
             }
 
             if (!empty($courses_options)) {
-                $options[] = get_string('choosecourse','local_ualmessages');
+                $options[] = get_string('savedandrecent','local_ualmessages');
                 $options[] = array(get_string('courses') => $courses_options);
             }
         }
@@ -269,6 +269,9 @@ TEMP */
         $content .= html_writer::end_tag('label');
         $content .= html_writer::select($options, 'viewing', $viewing, false, array('id' => 'viewing', 'name'=>'viewing', 'onchange' => 'this.form.submit()'));
         $content .= '<br>';
+        $content .= html_writer::start_tag('label');
+        $content .= get_string('searchthislist', 'local_ualmessages');
+        $content .= html_writer::end_tag('label');
         $content .= html_writer::tag('input', '', array('type'=>'text', 'class'=>'nolabel' ,'id'=>'msgsearchname', 'name'=>'msgsearchname'));
         $content .= html_writer::end_tag('p');
         //$content .= html_writer::end_tag('form');
@@ -284,6 +287,10 @@ TEMP */
         // get course participant contacts - using the filter
         $course_id = intval(substr($viewing, 7));
         if(!empty($course_id)) {
+            
+            $content .= html_writer::start_tag('h2');
+            $content .= get_string('recent','local_ualmessages');
+            $content .= html_writer::end_tag('h2');
             
             $countparticipants = count_enrolled_users($coursecontexts[$course_id]);
             $participants = get_enrolled_users($coursecontexts[$course_id], '', 0, 'u.*', '', $page*50, 50);
@@ -361,6 +368,10 @@ TEMP */
             }
         } else {   // get all contacts
             
+            $content .= html_writer::start_tag('h2');
+            $content .= get_string('savedcontacts','local_ualmessages');
+            $content .= html_writer::end_tag('h2');
+                                         
             // find contacts
             $countunreadtotal = message_count_unread_messages($USER);
             $blockedusers = message_get_blocked_users($USER, '');
@@ -425,9 +436,9 @@ TEMP */
             
             $content .= html_writer::end_tag('table');
         
-            if ($countstrangers && ($countonlinecontacts + $countofflinecontacts == 0)) {  // Extra help
+            /*if ($countstrangers && ($countonlinecontacts + $countofflinecontacts == 0)) {  // Extra help
                 $content .= html_writer::tag('div','('.get_string('addsomecontactsincoming', 'message').')',array('class' => 'note'));
-            }
+            }*/
 
             //$content .= html_writer::end_tag('div');
         }
@@ -511,7 +522,7 @@ TEMP */
             }
 
             if (!empty($courses_options)) {
-                $options[] = get_string('choosecourse','local_ualmessages');
+                $options[] = get_string('savedandrecent','local_ualmessages');
                 $options[] = array(get_string('courses') => $courses_options);
             }
         }
@@ -651,6 +662,9 @@ TEMP */
                 $content .= html_writer::end_tag('ul');
             }
         
+            $content .= html_writer::start_tag('h2');
+            $content .= get_string('savedcontacts','local_ualmessages');
+            $content .= html_writer::end_tag('h2');
             $content .= html_writer::start_tag('table', array('id' => 'message_contacts', 'class' => 'boxaligncenter'));
         
         
@@ -699,9 +713,9 @@ TEMP */
             
             $content .= html_writer::end_tag('table');
         
-            if ($countstrangers && ($countonlinecontacts + $countofflinecontacts == 0)) {  // Extra help
+            /*if ($countstrangers && ($countonlinecontacts + $countofflinecontacts == 0)) {  // Extra help
                 $content .= html_writer::tag('div','('.get_string('addsomecontactsincoming', 'message').')',array('class' => 'note'));
-            }
+            }*/
 
             //$content .= html_writer::end_tag('div');
         }
