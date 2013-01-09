@@ -373,7 +373,7 @@ TEMP */
         } else {   // get all contacts
             
             $content .= html_writer::start_tag('h2');
-            $content .= get_string('recent','local_ualmessages');
+            $content .= get_string('savedcontacts','local_ualmessages');
             $content .= html_writer::end_tag('h2');
                                          
             // find contacts
@@ -405,7 +405,7 @@ TEMP */
                 $isusercontact = true;
                 foreach ($onlinecontacts as $contact) {
                     if ($contact->messagecount >= 0) {
-                        $content .= $this->get_contacts($contact, $isusercontact, $isuserblocked, $search);
+                        $content .= $this->get_contacts2($contact, $isusercontact, $isuserblocked, $search);
                     }
                 }
             }
@@ -420,7 +420,7 @@ TEMP */
                 $isusercontact = true;
                 foreach ($offlinecontacts as $contact) {
                     if ($contact->messagecount >= 0) {
-                        $content .= $this->get_contacts($contact, $isusercontact, $isuserblocked, $search);
+                        $content .= $this->get_contacts2($contact, $isusercontact, $isuserblocked, $search);
                     }
                 }
         
@@ -433,7 +433,7 @@ TEMP */
                 $isusercontact = false;
                 foreach ($strangers as $stranger) {
                     if ($stranger->messagecount >= 0) {
-                        $content .= $this->get_contacts($stranger, $isusercontact, $isuserblocked, $search);
+                        $content .= $this->get_contacts2($stranger, $isusercontact, $isuserblocked, $search);
                     }
                 }
             }
@@ -797,6 +797,79 @@ TEMP */
         
         return $this_contact;
     }
+    
+    private function get_contacts2($contact, $incontactlist, $isblocked, $search) {
+        
+        global $OUTPUT, $USER;
+        
+        $this_contact="";
+        
+        $fullname  = fullname($contact);
+        $fullnamelink  = $fullname;
+        
+        // check if search if used
+        if($search!='')
+        {
+            if($search!='' && stripos($fullname,$search,0)===false)
+            {
+                return $this_contact;
+            }
+        }
+    
+        $linkclass = '';
+        if (!empty($selecteduser) && $contact->id == $selecteduser->id) {
+            $linkclass = 'messageselecteduser';
+        }
+    
+        /// are there any unread messages for this contact?
+        if ($contact->messagecount > 0 ){
+            $fullnamelink = '<strong>'.$fullnamelink.' ('.$contact->messagecount.')</strong>';
+        }
+    
+        $strcontact = $strblock = $strhistory = null;
+    
+        $strcontact = message_get_contact_add_remove_link($incontactlist, $isblocked, $contact);
+        $strcontact = str_replace('.php&amp;','.php?',$strcontact);
+        $strblock   = message_get_contact_block_link($incontactlist, $isblocked, $contact);
+        $strblock = str_replace('.php&amp;','.php?',$strblock);
+        $strhistory = message_history_link($USER->id, $contact->id, true, '', '', 'icon');
+        //http://localhost/moodle/message/index.php?history=1&user1=2&user2=3
+        $strhistory = str_replace('/message/index.php', '/local/ualmessages/send.php',$strhistory);
+        
+        $this_contact.= html_writer::start_tag('tr');
+        $this_contact.= html_writer::start_tag('td', array('class' => 'pix'));
+        $this_contact.= $OUTPUT->user_picture($contact, array('size' => 20, 'courseid' => SITEID));
+        $this_contact.= html_writer::end_tag('td');
+    
+        $this_contact.= html_writer::start_tag('td', array('class' => 'contact'));
+    
+        /*$popupoptions = array(
+                'height' => MESSAGE_DISCUSSION_HEIGHT,
+                'width' => MESSAGE_DISCUSSION_WIDTH,
+                'menubar' => false,
+                'location' => false,
+                'status' => true,
+                'scrollbars' => true,
+                'resizable' => true);*/
+    
+        $link = $action = null;
+        if (!empty($selectcontacturl)) {
+            $link = new moodle_url($selectcontacturl.'&user2='.$contact->id);
+        } else {
+            $link = new moodle_url("/local/ualmessages/view.php?id=$contact->id");
+            //$action = new popup_action('click', $link, "message_$contact->id", $popupoptions);
+        }
+        $this_contact.= $OUTPUT->action_link($link, $fullnamelink, $action, array('class' => $linkclass,'title' => get_string('sendmessageto', 'message', $fullname)));
+    
+        $this_contact.= html_writer::end_tag('td');
+    
+        $this_contact.= html_writer::tag('td', '&nbsp;'.$strcontact.$strblock.'&nbsp;'.$strhistory, array('class' => 'link'));
+    
+        $this_contact.= html_writer::end_tag('tr');
+        
+        return $this_contact;
+    }
+
     
     public function print_message_view_history_page($user1, $user2, $history) {
         
