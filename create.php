@@ -25,6 +25,12 @@ require('lib.php');
 $viewing = optional_param('viewing', 0, PARAM_ALPHANUMEXT);
 $page = optional_param('page', 0, PARAM_INT);
 $search = optional_param('search', '', PARAM_CLEAN);
+
+$removecontact  = optional_param('removecontact',  0, PARAM_INT);
+$blockcontact   = optional_param('blockcontact',   0, PARAM_INT);
+$unblockcontact = optional_param('unblockcontact', 0, PARAM_INT);
+$addcontact     = optional_param('addcontact',     0, PARAM_INT);
+
 $message = '';
 $user_from_id = 0;
 $user_to_id = 0;
@@ -41,6 +47,24 @@ if(isset($_POST['message'])) {
 }
 
 require_login();
+
+if ($removecontact and confirm_sesskey()) {
+    add_to_log(SITEID, 'message', 'remove contact', 'index.php?user1='.$removecontact.'&amp;user2='.$USER->id, $removecontact);
+    message_remove_contact($removecontact);
+}
+if ($blockcontact and confirm_sesskey()) {
+    add_to_log(SITEID, 'message', 'block contact', 'index.php?user1='.$blockcontact.'&amp;user2='.$USER->id, $blockcontact);
+    message_block_contact($blockcontact);
+}
+if ($unblockcontact and confirm_sesskey()) {
+    add_to_log(SITEID, 'message', 'unblock contact', 'index.php?user1='.$unblockcontact.'&amp;user2='.$USER->id, $unblockcontact);
+    message_unblock_contact($unblockcontact);
+}
+if ($addcontact and confirm_sesskey()) {
+    add_to_log(SITEID, 'message', 'add contact', 'index.php?user1='.$addcontact.'&amp;user2='.$USER->id, $addcontact);
+    message_add_contact($addcontact);
+    redirect($CFG->wwwroot . '/local/ualmessages/contacts.php?id='.$addcontact);
+}
 
 $context = context_user::instance($USER->id);
 
