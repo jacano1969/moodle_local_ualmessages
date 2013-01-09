@@ -643,6 +643,12 @@ TEMP */
                 $content .= get_string('contactlistempty', 'local_ualmessages');
                 $content .= html_writer::end_tag('li');
                 $content .= html_writer::end_tag('ul');
+            } else {
+                $content .= html_writer::start_tag('ul');
+                $content .= html_writer::start_tag('li');
+                $content .= get_string('yoursavedcontacts', 'local_ualmessages');
+                $content .= html_writer::end_tag('li');
+                $content .= html_writer::end_tag('ul');
             }
         
             $content .= html_writer::start_tag('table', array('id' => 'message_contacts', 'class' => 'boxaligncenter'));
