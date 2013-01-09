@@ -560,7 +560,6 @@ TEMP */
                        
         // inbox
         $content .= html_writer::start_tag('div', array('class'=>'inbox'));
-        $content .= html_writer::start_tag('ul');
         
         // prepare search
         $search = stripcslashes(clean_text(trim($search)));
@@ -650,6 +649,12 @@ TEMP */
             }
         } else {   // get all contacts
             
+            $content .= html_writer::start_tag('h2');
+            $content .= get_string('recent','local_ualmessages');
+            $content .= html_writer::end_tag('h2');
+            
+            $content .= html_writer::start_tag('ul');
+            
             // find contacts
             $countunreadtotal = message_count_unread_messages($USER);
             $blockedusers = message_get_blocked_users($USER, '');
@@ -661,10 +666,6 @@ TEMP */
             $countofflinecontacts = count($offlinecontacts);
             $countstrangers       = count($strangers);
             $isuserblocked = null;
-        
-            $content .= html_writer::start_tag('h2');
-            $content .= get_string('recent','local_ualmessages');
-            $content .= html_writer::end_tag('h2');
             
             if ($countonlinecontacts + $countofflinecontacts == 0) {
                 $content .= html_writer::start_tag('ul');
