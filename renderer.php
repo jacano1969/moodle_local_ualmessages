@@ -228,9 +228,12 @@ TEMP */
         $content .= get_string('createanewmessage','local_ualmessages');
         $content .= html_writer::end_tag('h2');
         //$content .= get_string('chooseacontact','local_ualmessages');
+        $content .= html_writer::start_tag('p');
         $content .= get_string('chooseacontacttosend','local_ualmessages');
-        $content .= '<br>';
+        $content .= html_writer::end_tag('p');
+        $content .= html_writer::start_tag('p');
         $content .= get_string('selectgroupchoosecontact','local_ualmessages').'...';
+        $content .= html_writer::end_tag('p');
         //$content .= html_writer::end_tag('p');
         
         // filter
