@@ -280,7 +280,7 @@ TEMP */
                        
         // inbox
         $content .= html_writer::start_tag('div', array('class'=>'inbox'));
-        $content .= html_writer::start_tag('ul');
+        
         
         // prepare search
         $search = stripcslashes(clean_text(trim($search)));
@@ -292,6 +292,8 @@ TEMP */
             //$content .= html_writer::start_tag('h2');
             //$content .= get_string('recent','local_ualmessages');
             //$content .= html_writer::end_tag('h2');
+            
+            $content .= html_writer::start_tag('ul');
             
             $countparticipants = count_enrolled_users($coursecontexts[$course_id]);
             $participants = get_enrolled_users($coursecontexts[$course_id], '', 0, 'u.*', '', $page*50, 50);
@@ -375,7 +377,9 @@ TEMP */
             $content .= html_writer::start_tag('h2');
             $content .= get_string('savedcontacts','local_ualmessages');
             $content .= html_writer::end_tag('h2');
-                                         
+                                    
+            $content .= html_writer::start_tag('ul');     
+            
             // find contacts
             $countunreadtotal = message_count_unread_messages($USER);
             $blockedusers = message_get_blocked_users($USER, '');
@@ -390,11 +394,11 @@ TEMP */
         
             if ($countonlinecontacts + $countofflinecontacts == 0) {
                 $content .= html_writer::tag('div', get_string('contactlistempty', 'local_ualmessages'), array('class' => 'heading'));
-                $content .= html_writer::end_tag('ul');
-                $content .= html_writer::start_tag('ul');
                 $content .= html_writer::start_tag('h2');
                 $content .= get_string('recent','local_ualmessages');
-                $content .= html_writer::end_tag('h2');                
+                $content .= html_writer::end_tag('h2'); 
+                $content .= html_writer::end_tag('ul');
+                $content .= html_writer::start_tag('ul');               
             }
         
             $content .= html_writer::start_tag('table', array('id' => 'message_contacts', 'class' => 'boxaligncenter'));
