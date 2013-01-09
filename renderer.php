@@ -288,9 +288,9 @@ TEMP */
         $course_id = intval(substr($viewing, 7));
         if(!empty($course_id)) {
             
-            $content .= html_writer::start_tag('h2');
-            $content .= get_string('recent','local_ualmessages');
-            $content .= html_writer::end_tag('h2');
+            //$content .= html_writer::start_tag('h2');
+            //$content .= get_string('recent','local_ualmessages');
+            //$content .= html_writer::end_tag('h2');
             
             $countparticipants = count_enrolled_users($coursecontexts[$course_id]);
             $participants = get_enrolled_users($coursecontexts[$course_id], '', 0, 'u.*', '', $page*50, 50);
