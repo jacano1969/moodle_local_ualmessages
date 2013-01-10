@@ -407,3 +407,20 @@ function get_contactsearch_contacts($contact, $incontactlist, $isblocked, $searc
     return $this_contact;
 }
 
+// function too mark an individual message as read
+function message_mark_message_read($message, $timeread, $messageworkingempty=false) {
+    global $DB;
+
+    $message->timeread = $timeread;
+
+    $messageid = $message->id;
+    unset($message->id);//unset because it will get a new id on insert into message_read
+
+    //If any processors have pending actions abort them
+    if (!$messageworkingempty) {
+        $DB->delete_records('message_working', array('unreadmessageid' => $messageid));
+    }
+    $messagereadid = $DB->insert_record('message_read', $message);
+    $DB->delete_records('message', array('id' => $messageid));
+    return $messagereadid;
+}
