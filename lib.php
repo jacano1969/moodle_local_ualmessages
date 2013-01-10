@@ -237,7 +237,7 @@ function get_recent_conversation($message_id) {
             
             // if reading for the first time mark this message as read
             if($message_is_read==false) {
-                message_mark_message_read($message, time());
+                message_mark_message_read2($message, time());
             }
         
             $this_msg_from_user_id = $message->useridfrom;
@@ -408,7 +408,7 @@ function get_contactsearch_contacts($contact, $incontactlist, $isblocked, $searc
 }
 
 // function too mark an individual message as read
-function message_mark_message_read($message, $timeread, $messageworkingempty=false) {
+function message_mark_message_read2($message, $timeread, $messageworkingempty=false) {
     global $DB;
 
     $message->timeread = $timeread;
