@@ -386,7 +386,7 @@ TEMP */
             // find contacts
             $countunreadtotal = message_count_unread_messages($USER);
             $blockedusers = message_get_blocked_users($USER, '');
-            list($onlinecontacts, $offlinecontacts, $strangers) = message_get_contacts($USER, '');
+            list($onlinecontacts, $offlinecontacts, $strangers) = $this->message_get_contacts2($USER, '');
             
             //$content .= html_writer::start_tag('div', array('class' => 'contactselector mdl-align'));
             
