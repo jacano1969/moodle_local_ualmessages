@@ -658,7 +658,7 @@ TEMP */
             // find contacts
             $countunreadtotal = message_count_unread_messages($USER);
             $blockedusers = message_get_blocked_users($USER, '');
-            list($onlinecontacts, $offlinecontacts, $strangers) = message_get_contacts($USER, '');
+            list($onlinecontacts, $offlinecontacts, $strangers) = $this->message_get_contacts2($USER, '');
             
             //$content .= html_writer::start_tag('div', array('class' => 'contactselector mdl-align'));
             
@@ -738,6 +738,88 @@ TEMP */
         return $content;
     }
     
+    /**
+    * Retrieve $user1's contacts (online, offline and strangers)
+    *
+    * @param object $user1 the user whose messages are being viewed
+    * @param object $user2 the user $user1 is talking to. If they are a contact
+    *                      they will have a variable called 'iscontact' added to their user object
+    * @return array containing 3 arrays. array($onlinecontacts, $offlinecontacts, $strangers)
+    */
+   private function message_get_contacts2($user1=null, $user2=null) {
+       global $DB, $CFG, $USER;
+   
+       if (empty($user1)) {
+           $user1 = $USER;
+       }
+   
+       if (!empty($user2)) {
+           $user2->iscontact = false;
+       }
+   
+       $timetoshowusers = 300; //Seconds default
+       if (isset($CFG->block_online_users_timetosee)) {
+           $timetoshowusers = $CFG->block_online_users_timetosee * 60;
+       }
+   
+       // time which a user is counting as being active since
+       $timefrom = time()-$timetoshowusers;
+   
+       // people in our contactlist who are online
+       $onlinecontacts  = array();
+       // people in our contactlist who are offline
+       $offlinecontacts = array();
+       // people who are not in our contactlist but have sent us a message
+       $strangers       = array();
+   
+       $userfields = user_picture::fields('u', array('lastaccess'));
+   
+       // get all in our contactlist who are not blocked in our contact list
+       // and count messages we have waiting from each of them
+       $contactsql = "SELECT $userfields, COUNT(m.id) AS messagecount
+                        FROM {message_contacts} mc
+                        JOIN {user} u ON u.id = mc.contactid
+                        LEFT OUTER JOIN {message_read} mr ON mr.useridfrom = mc.contactid AND mr.useridto = ?
+                        LEFT OUTER JOIN {message} m ON m.useridfrom = mc.contactid AND m.useridto = ?
+                       WHERE mc.userid = ? AND mc.blocked = 0
+                    GROUP BY $userfields
+                    ORDER BY u.firstname ASC";
+   
+       $rs = $DB->get_recordset_sql($contactsql, array($user1->id, $user1->id));
+       foreach ($rs as $rd) {
+           if ($rd->lastaccess >= $timefrom) {
+               // they have been active recently, so are counted online
+               $onlinecontacts[] = $rd;
+   
+           } else {
+               $offlinecontacts[] = $rd;
+           }
+   
+           if (!empty($user2) && $user2->id == $rd->id) {
+               $user2->iscontact = true;
+           }
+       }
+       $rs->close();
+   
+       // get messages from anyone who isn't in our contact list and count the number
+       // of messages we have from each of them
+       $strangersql = "SELECT $userfields, count(m.id) as messagecount
+                         FROM {message} m
+                         JOIN {user} u  ON u.id = m.useridfrom
+                         LEFT OUTER JOIN {message_contacts} mc ON mc.contactid = m.useridfrom AND mc.userid = m.useridto
+                        WHERE mc.id IS NULL AND m.useridto = ?
+                     GROUP BY $userfields
+                     ORDER BY u.firstname ASC";
+   
+       $rs = $DB->get_recordset_sql($strangersql, array($USER->id));
+       foreach ($rs as $rd) {
+           $strangers[] = $rd;
+       }
+       $rs->close();
+   
+       return array($onlinecontacts, $offlinecontacts, $strangers);
+    }
+
     
     private function get_contacts($contact, $incontactlist, $isblocked, $search) {
         
