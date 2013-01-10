@@ -206,6 +206,8 @@ function get_recent_conversation($message_id) {
     
     $recent_conversations="";
     
+    $message_is_read=false;
+    
     $logged_in_user_id = $USER->id;
     
     // get message data (unread message)
@@ -214,6 +216,7 @@ function get_recent_conversation($message_id) {
     if(!$msg){
         // it might be an already read message
         $msg = $DB->get_record('message_read', array('id'=>$message_id));
+        $message_is_read=true;
     }
 
     $msg_from_user_id = $msg->useridfrom;
@@ -232,6 +235,11 @@ function get_recent_conversation($message_id) {
         
         foreach ($messages as $message) {
             
+            // if reading for the first time mark this message as read
+            if($message_is_read==false) {
+                message_mark_message_read($message, time());
+            }
+        
             $this_msg_from_user_id = $message->useridfrom;
             
             // get the time message created
