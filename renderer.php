@@ -785,7 +785,7 @@ TEMP */
                     GROUP BY $userfields
                     ORDER BY u.firstname ASC";
    
-       $rs = $DB->get_recordset_sql($contactsql, array($user1->id, $user1->id));
+       $rs = $DB->get_recordset_sql($contactsql, array($user1->id, $user1->id, $user1->id));
        foreach ($rs as $rd) {
            if ($rd->lastaccess >= $timefrom) {
                // they have been active recently, so are counted online
