@@ -306,6 +306,7 @@ TEMP */
             
             $content .= html_writer::start_tag('table', array('id' => 'message_participants', 'class' => 'boxaligncenter', 'cellspacing' => '2', 'cellpadding' => '0', 'border' => '0'));
             
+            
             $iscontact = true;
             $isblocked = false;
             foreach ($participants as $participant) {
@@ -331,6 +332,13 @@ TEMP */
                             $fullnamelink = '<strong>'.$fullnamelink.' ('.$participant->messagecount.')</strong>';
                         }
                     
+                        // check if participant is a contact
+                        $iscontact = false;
+                        
+                        if($DB->get_record('message_contacts', array('userid' => $USER->id, 'contactid' => $participant->id)) {
+                            $iscontact = false;
+                        }
+                        
                         $strcontact = $strblock = $strhistory = null;
                         $strcontact = message_get_contact_add_remove_link($iscontact, $isblocked, $participant);
                         $strblock   = message_get_contact_block_link($iscontact, $isblocked, $participant);
