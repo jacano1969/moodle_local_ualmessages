@@ -1037,7 +1037,7 @@ TEMP */
     }
     
     // create new message
-    public function print_send_message_page($user_id_to) {
+    public function print_send_message_page($user_id_to, $viewing) {
         
         global $USER, $CFG, $DB, $OUTPUT;
         

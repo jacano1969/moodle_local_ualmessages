@@ -23,6 +23,7 @@ require('../../config.php');
 require('lib.php');
 
 $user_to_id = optional_param('id', 0, PARAM_INT);
+$viewing = optional_param('viewing', 0, PARAM_ALPHANUMEXT)
 
 require_login();
 
@@ -45,9 +46,9 @@ echo $OUTPUT->header();
 if($user_to_id==0)
 {
     // need to redirect to contacts page to select contact
-    echo $renderer->print_create_message_contact_page(0,0,'');
+    echo $renderer->print_create_message_contact_page($viewing,0,'');
 } else {
-    echo $renderer->print_send_message_page($user_to_id);    
+    echo $renderer->print_send_message_page($user_to_id, $viewing);    
 }
 
 echo $OUTPUT->footer();
