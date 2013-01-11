@@ -940,6 +940,13 @@ TEMP */
         $strblock = str_replace('.php&amp;','.php?',$strblock);
         $strhistory = message_history_link($USER->id, $contact->id, true, '', '', 'icon');
         //http://localhost/moodle/message/index.php?history=1&user1=2&user2=3
+        
+        //$strcontact = message_get_contact_add_remove_link($incontactlist, $isblocked, $contact);
+        //$strcontact = str_replace('.php&amp;','.php?',$strcontact);
+        //$strblock   = message_get_contact_block_link($incontactlist, $isblocked, $contact);
+        //$strblock = str_replace('.php&amp;','.php?',$strblock);
+        //$strhistory = message_history_link($USER->id, $contact->id, true, '', '', 'icon');
+        //http://localhost/moodle/message/index.php?history=1&user1=2&user2=3
         $strhistory = str_replace('/message/index.php', '/local/ualmessages/view.php',$strhistory);
         
         $this_contact.= html_writer::start_tag('tr');
