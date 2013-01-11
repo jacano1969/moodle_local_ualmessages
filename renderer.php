@@ -332,11 +332,11 @@ TEMP */
                         }
                     
                         $strcontact = $strblock = $strhistory = null;
-                        //$strcontact = message_get_contact_add_remove_link($iscontact, $isblocked, $participant);
-                        //$strblock   = message_get_contact_block_link($iscontact, $isblocked, $participant);
-                        //$strhistory = message_history_link($USER->id, $participant->id, true, '', '', 'icon');
+                        $strcontact = message_get_contact_add_remove_link($iscontact, $isblocked, $participant);
+                        $strblock   = message_get_contact_block_link($iscontact, $isblocked, $participant);
+                        $strhistory = message_history_link($USER->id, $participant->id, true, '', '', 'icon');
                         //http://localhost/moodle/message/index.php?history=1&user1=2&user2=3
-                        //$strhistory = str_replace('/message/index.php', '/local/ualmessages/view.php',$strhistory);
+                        $strhistory = str_replace('/message/index.php', '/local/ualmessages/view.php',$strhistory);
         
                         $content .= html_writer::start_tag('tr');
                         $content .= html_writer::start_tag('td', array('class' => 'pix'));
