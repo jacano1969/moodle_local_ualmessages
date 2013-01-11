@@ -23,7 +23,7 @@ require('../../config.php');
 require('lib.php');
 
 $user_to_id = optional_param('id', 0, PARAM_INT);
-$viewing = optional_param('viewing', 0, PARAM_ALPHANUMEXT)
+$viewing = optional_param('viewing', 0, PARAM_ALPHANUMEXT);
 
 require_login();
 
