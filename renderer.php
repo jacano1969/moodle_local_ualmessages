@@ -338,16 +338,27 @@ TEMP */
                         global $DB;
                         
                         if($DB->get_record('message_contacts', array('userid' => $USER->id, 'contactid' => $participant->id))) {
-                            $iscontact = false;
+                            $iscontact = true;
                         }
                         
+                        $strcontact = $strblock = $strhistory = null;
+                        $strcontact = message_get_contact_add_remove_link($iscontact, $isblocked, $participant);
+                        $strcontact = str_replace('.php&amp;','.php?',$strcontact);
+                        $strblock   = message_get_contact_block_link($iscontact, $isblocked, $participant);
+                        $strblock = str_replace('.php&amp;','.php?',$strblock);
+                        $strhistory = message_history_link($USER->id, $participant->id, true, '', '', 'icon');
+                        //http://localhost/moodle/message/index.php?history=1&user1=2&user2=3
+                        $strhistory = str_replace('/message/index.php', '/local/ualmessages/view.php',$strhistory);
+                        
+                        /*
                         $strcontact = $strblock = $strhistory = null;
                         $strcontact = message_get_contact_add_remove_link($iscontact, $isblocked, $participant);
                         $strblock   = message_get_contact_block_link($iscontact, $isblocked, $participant);
                         $strhistory = message_history_link($USER->id, $participant->id, true, '', '', 'icon');
                         //http://localhost/moodle/message/index.php?history=1&user1=2&user2=3
                         $strhistory = str_replace('/message/index.php', '/local/ualmessages/view.php',$strhistory);
-        
+                        */
+                        
                         $content .= html_writer::start_tag('tr');
                         $content .= html_writer::start_tag('td', array('class' => 'pix'));
                         $content .= $OUTPUT->user_picture($participant, array('size' => 20, 'courseid' => SITEID));
@@ -939,13 +950,6 @@ TEMP */
         $strblock   = message_get_contact_block_link($incontactlist, $isblocked, $contact);
         $strblock = str_replace('.php&amp;','.php?',$strblock);
         $strhistory = message_history_link($USER->id, $contact->id, true, '', '', 'icon');
-        //http://localhost/moodle/message/index.php?history=1&user1=2&user2=3
-        
-        //$strcontact = message_get_contact_add_remove_link($incontactlist, $isblocked, $contact);
-        //$strcontact = str_replace('.php&amp;','.php?',$strcontact);
-        //$strblock   = message_get_contact_block_link($incontactlist, $isblocked, $contact);
-        //$strblock = str_replace('.php&amp;','.php?',$strblock);
-        //$strhistory = message_history_link($USER->id, $contact->id, true, '', '', 'icon');
         //http://localhost/moodle/message/index.php?history=1&user1=2&user2=3
         $strhistory = str_replace('/message/index.php', '/local/ualmessages/view.php',$strhistory);
         
