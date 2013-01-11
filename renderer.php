@@ -645,7 +645,7 @@ TEMP */
                         $content .= html_writer::end_tag('td');
                     
                         //$content .= html_writer::tag('td', '&nbsp;'.$strcontact.$strblock.'&nbsp;'.$strhistory, array('class' => 'link'));
-                        $content .= html_writer::tag('td', '&nbsp;', '');
+                        $content .= html_writer::tag('td', '&nbsp;', array());
                     
                         $content .= html_writer::end_tag('tr');
                     }
