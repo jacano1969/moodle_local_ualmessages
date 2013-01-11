@@ -335,6 +335,8 @@ TEMP */
                         // check if participant is a contact
                         $iscontact = false;
                         
+                        global $DB;
+                        
                         if($DB->get_record('message_contacts', array('userid' => $USER->id, 'contactid' => $participant->id))) {
                             $iscontact = false;
                         }
