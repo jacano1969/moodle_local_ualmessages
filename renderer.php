@@ -1099,6 +1099,7 @@ TEMP */
         $content .= get_string('yourmessage','local_ualmessages');
         $content .= html_writer::end_tag('label');
         $content .= html_writer::tag('textarea', '', array('name'=>'message','rows'=>'4', 'cols'=>'100'));
+        $content .= html_writer::empty_tag('input', array('type'=>'hidden','name'=>'viewing','value'=>$viewing));
         $content .= html_writer::empty_tag('input', array('type'=>'submit','value'=>get_string('send','local_ualmessages')));
         $content .= html_writer::end_tag('form');
             
