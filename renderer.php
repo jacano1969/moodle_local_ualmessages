@@ -290,6 +290,8 @@ TEMP */
         
         // get course participant contacts - using the filter
         $course_id = intval(substr($viewing, 7));
+        
+        $pagingbarused=false;
         if(!empty($course_id)) {
             
             //$content .= html_writer::start_tag('h2');
@@ -303,6 +305,7 @@ TEMP */
             
             $pagingbar = new paging_bar($countparticipants, $page, 50, $PAGE->url, 'page');
             $content .= $OUTPUT->render($pagingbar);
+            $pagingbarused=true;
             
             $content .= html_writer::start_tag('table', array('id' => 'message_participants', 'class' => 'boxaligncenter', 'cellspacing' => '2', 'cellpadding' => '0', 'border' => '0'));
             
@@ -395,6 +398,11 @@ TEMP */
             }
             
             $content .= html_writer::end_tag('table');
+            
+            if($pagingbarused==true) {
+                $pagingbar = new paging_bar($countparticipants, $page, 50, $PAGE->url, 'page');
+                $content .= $OUTPUT->render($pagingbar);
+            }
             
         } else {   // get all contacts
             
@@ -600,6 +608,8 @@ TEMP */
         // prepare search
         $search = stripcslashes(clean_text(trim($search)));
         
+        $pagingbarused=false;
+        
         if(!empty($course_id)) {
             
             $countparticipants = count_enrolled_users($coursecontexts[$course_id]);
@@ -610,6 +620,7 @@ TEMP */
             $pagingbar = new paging_bar($countparticipants, $page, 50, $PAGE->url, 'page');
             //$pagingbar = new paging_bar($countparticipants, $page, 50, $pageLink, 'page');
             $content .= $OUTPUT->render($pagingbar);
+            $pagingbarused=true;
             
             $content .= html_writer::start_tag('table', array('id' => 'message_participants', 'class' => 'boxaligncenter', 'cellspacing' => '2', 'cellpadding' => '0', 'border' => '0'));
             
@@ -755,6 +766,12 @@ TEMP */
             
             $content .= html_writer::end_tag('table');
         
+            if($pagingbarused==true) {
+                $pagingbar = new paging_bar($countparticipants, $page, 50, $PAGE->url, 'page');
+                $content .= $OUTPUT->render($pagingbar);
+            }
+            
+            
             /*if ($countstrangers && ($countonlinecontacts + $countofflinecontacts == 0)) {  // Extra help
                 $content .= html_writer::tag('div','('.get_string('addsomecontactsincoming', 'message').')',array('class' => 'note'));
             }*/
