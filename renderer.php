@@ -591,7 +591,7 @@ TEMP */
 
         if(!empty($course_id)) {
             $content .= html_writer::start_tag('h2');
-            $content .= print_r($options);
+            $content .= $courses_options[$viewing];
             $content .= html_writer::end_tag('h2');
             $content .= html_writer::start_tag('p');
             $content .= html_writer::start_tag('label');
