@@ -581,11 +581,12 @@ TEMP */
         $content .= get_string('filterbycourse', 'local_ualmessages');
         $content .= html_writer::end_tag('label');
         
-        if(!empty($course_id)) {
+        // removed
+        /*if(!empty($course_id)) {
             $content .= html_writer::select($options, 'viewing', $viewing, false, array('id' => 'viewing','onchange' => 'this.form.search.value=\'\';this.form.submit()'));
-        } else {
+        } else {*/
             $content .= html_writer::select($options, 'viewing', $viewing, false, array('id' => 'viewing','onchange' => 'this.form.submit()'));
-        }
+        //}
         
         if(!empty($course_id)) {
             $content .= html_writer::tag('hr','',array('class'=>'hr-contacts'));
