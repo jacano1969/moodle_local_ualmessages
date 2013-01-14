@@ -590,6 +590,9 @@ TEMP */
         $content .= html_writer::end_tag('p');
 
         if(!empty($course_id)) {
+            $content .= html_writer::start_tag('h2');
+            $content .= $options[$viewing];
+            $content .= html_writer::end_tag('h2');
             $content .= html_writer::start_tag('p');
             $content .= html_writer::start_tag('label');
             $content .= get_string('searchcontacts', 'local_ualmessages');
