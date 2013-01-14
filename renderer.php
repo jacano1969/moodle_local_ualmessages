@@ -588,7 +588,9 @@ TEMP */
         }
         
         $content .= html_writer::end_tag('p');
-
+        $content .= html_writer::end_tag('div');
+        $content .= html_writer::start_tag('div', array('class'=>'filter'));
+        
         if(!empty($course_id)) {
             $content .= html_writer::start_tag('h2');
             $content .= $courses_options[$viewing];
