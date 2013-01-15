@@ -802,6 +802,13 @@ TEMP */
 
         $content .= html_writer::end_tag('table');
     
+        if(!empty($course_id)) {
+            if($pagingbarused==true) {
+                $pagingbar = new paging_bar($countparticipants, $page, 50, $PAGE->url, 'page');
+                $content .= $OUTPUT->render($pagingbar);
+            }
+        }
+        
         $content .= html_writer::end_tag('div');
         
         $content .= html_writer::end_tag('div');
