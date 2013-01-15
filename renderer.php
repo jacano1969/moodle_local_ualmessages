@@ -266,6 +266,9 @@ TEMP */
             }
         }
         
+        // get course participant contacts - using the filter
+        $course_id = intval(substr($viewing, 7));
+        
         $content .= html_writer::start_tag('p');
         $content .= html_writer::start_tag('label');
         $content .= get_string('filterbycourse', 'local_ualmessages');
@@ -273,7 +276,12 @@ TEMP */
         $content .= html_writer::select($options, 'viewing', $viewing, false, array('id' => 'viewing', 'name'=>'viewing', 'onchange' => 'this.form.submit()'));
         $content .= '<br>';
         $content .= html_writer::start_tag('label');
-        $content .= get_string('searchthislist', 'local_ualmessages');
+        
+        if(!empty($course_id)) {
+            $content .= get_string('searchthisgroup', 'local_ualmessages');
+        } else {
+            $content .= get_string('searchthislist', 'local_ualmessages');
+        }
         $content .= html_writer::end_tag('label');
         $content .= html_writer::tag('input', '', array('type'=>'text', 'class'=>'nolabel' ,'id'=>'msgsearchname', 'name'=>'msgsearchname'));
         $content .= html_writer::end_tag('p');
@@ -287,9 +295,6 @@ TEMP */
         
         // prepare search
         $search = stripcslashes(clean_text(trim($search)));
-        
-        // get course participant contacts - using the filter
-        $course_id = intval(substr($viewing, 7));
         
         $pagingbarused=false;
         if(!empty($course_id)) {
@@ -597,7 +602,7 @@ TEMP */
             
             // added
             $content .= html_writer::start_tag('label');
-            $content .= get_string('searchthislist', 'local_ualmessages');
+            $content .= get_string('searchthisgroup', 'local_ualmessages');
             $content .= html_writer::end_tag('label');
             $content .= html_writer::tag('input', '', array('type'=>'text', 'class'=>'nolabel' ,'id'=>'msgsearchname', 'name'=>'msgsearchname'));
         

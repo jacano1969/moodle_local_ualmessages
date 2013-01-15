@@ -26,6 +26,7 @@ $string['contactlistempty'] = 'You have no saved contacts';
 $string['yoursavedcontacts'] = 'Your saved contacts';
 $string['savedandrecent'] = 'Saved contacts'; /* chnaged from new and recent */
 $string['searchthislist'] = 'Search this list';
+$string['searchthisgroup'] = 'Search this group';
 $string['savedcontacts'] = 'Saved contacts';
 $string['recent'] = 'Recent';
 
