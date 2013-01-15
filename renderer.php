@@ -599,10 +599,10 @@ TEMP */
             $content .= html_writer::start_tag('h2');
             $content .= $courses_options[$viewing];
             $content .= html_writer::end_tag('h2');
-            $content .= html_writer::tag('hr','',array('class'=>'hr-contacts'));
             
             // added
             if($countparticipants>50) {
+                $content .= html_writer::tag('hr','',array('class'=>'hr-contacts'));
                 $content .= html_writer::start_tag('label');
                 $content .= get_string('searchthisgroup', 'local_ualmessages');
                 $content .= html_writer::end_tag('label');
