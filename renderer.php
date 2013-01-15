@@ -580,7 +580,9 @@ TEMP */
 
         // get course participant contacts - using the filter
         $course_id = intval(substr($viewing, 7));
-        $countparticipants = count_enrolled_users($coursecontexts[$course_id]);
+        if(!empty($course_id)) {
+            $countparticipants = count_enrolled_users($coursecontexts[$course_id]);
+        }
         
         //$content .= html_writer::start_tag('p');
         $content .= html_writer::start_tag('label');
