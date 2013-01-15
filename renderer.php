@@ -580,6 +580,7 @@ TEMP */
 
         // get course participant contacts - using the filter
         $course_id = intval(substr($viewing, 7));
+        $countparticipants = count_enrolled_users($coursecontexts[$course_id]);
         
         //$content .= html_writer::start_tag('p');
         $content .= html_writer::start_tag('label');
@@ -601,11 +602,13 @@ TEMP */
             $content .= html_writer::tag('hr','',array('class'=>'hr-contacts'));
             
             // added
-            $content .= html_writer::start_tag('label');
-            $content .= get_string('searchthisgroup', 'local_ualmessages');
-            $content .= html_writer::end_tag('label');
-            $content .= html_writer::tag('input', '', array('type'=>'text', 'class'=>'nolabel' ,'id'=>'msgsearchname', 'name'=>'msgsearchname'));
-        
+            if($countparticipants>50) {
+                $content .= html_writer::start_tag('label');
+                $content .= get_string('searchthisgroup', 'local_ualmessages');
+                $content .= html_writer::end_tag('label');
+                $content .= html_writer::tag('input', '', array('type'=>'text', 'class'=>'nolabel' ,'id'=>'msgsearchname', 'name'=>'msgsearchname'));
+            }
+            
             // removed
             //$content .= html_writer::start_tag('label');
             //$content .= get_string('searchcontacts', 'local_ualmessages');
@@ -632,10 +635,11 @@ TEMP */
             
             //$pageLink='/local/ualmessages/contacts.php?search=&viewing=course_'.$course_id;
             
-            $pagingbar = new paging_bar($countparticipants, $page, 50, $PAGE->url, 'page');
-            //$pagingbar = new paging_bar($countparticipants, $page, 50, $pageLink, 'page');
-            $content .= $OUTPUT->render($pagingbar);
-            $pagingbarused=true;
+            if($countparticipants>50) {
+                $pagingbar = new paging_bar($countparticipants, $page, 50, $PAGE->url, 'page');
+                $content .= $OUTPUT->render($pagingbar);
+                $pagingbarused=true;
+            }
             
             $content .= html_writer::start_tag('table', array('id' => 'message_participants', 'class' => 'boxaligncenter', 'cellspacing' => '2', 'cellpadding' => '0', 'border' => '0'));
             
