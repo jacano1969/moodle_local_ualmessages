@@ -274,17 +274,32 @@ TEMP */
         $content .= get_string('filterbycourse', 'local_ualmessages');
         $content .= html_writer::end_tag('label');
         $content .= html_writer::select($options, 'viewing', $viewing, false, array('id' => 'viewing', 'name'=>'viewing', 'onchange' => 'this.form.submit()'));
-        $content .= '<br>';
-        $content .= html_writer::start_tag('label');
+        
         
         if(!empty($course_id)) {
+            $content .= '<br>';
+            $content .= html_writer::start_tag('label');
             $content .= get_string('searchthisgroup', 'local_ualmessages');
+            $content .= html_writer::end_tag('label');
+            $content .= html_writer::tag('input', '', array('type'=>'text', 'class'=>'nolabel' ,'id'=>'msgsearchname', 'name'=>'msgsearchname'));
+            $content .= html_writer::end_tag('p');
         } else {
-            $content .= get_string('searchthislist', 'local_ualmessages');
+            
+            list($onlinecontacts, $offlinecontacts, $strangers) = $this->message_get_contacts2($USER, '');
+            $countonlinecontacts  = count($onlinecontacts);
+            $countofflinecontacts = count($offlinecontacts);
+        
+            if ($countonlinecontacts + $countofflinecontacts == 0) {
+            } else {
+                $content .= '<br>';
+                $content .= html_writer::start_tag('label');
+                $content .= get_string('searchthislist', 'local_ualmessages');
+                $content .= html_writer::end_tag('label');
+                $content .= html_writer::tag('input', '', array('type'=>'text', 'class'=>'nolabel' ,'id'=>'msgsearchname', 'name'=>'msgsearchname'));
+                $content .= html_writer::end_tag('p');
+            }
         }
-        $content .= html_writer::end_tag('label');
-        $content .= html_writer::tag('input', '', array('type'=>'text', 'class'=>'nolabel' ,'id'=>'msgsearchname', 'name'=>'msgsearchname'));
-        $content .= html_writer::end_tag('p');
+        
         //$content .= html_writer::end_tag('form');
         $content .= html_writer::end_tag('div');
                        
