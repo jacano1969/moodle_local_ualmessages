@@ -251,12 +251,18 @@ TEMP */
             foreach($courses as $course) {
                 if (has_capability('moodle/course:viewparticipants', $coursecontexts[$course->id])) {
                     //Not using short_text() as we want the end of the course name. Not the beginning.
-                    $shortname = format_string($course->shortname, true, array('context' => $coursecontexts[$course->id]));
+                    /*($shortname = format_string($course->shortname, true, array('context' => $coursecontexts[$course->id]));
                     if (textlib::strlen($shortname) > MESSAGE_MAX_COURSE_NAME_LENGTH) {
                         $courses_options[MESSAGE_VIEW_COURSE.$course->id] = '...'.textlib::substr($shortname, -MESSAGE_MAX_COURSE_NAME_LENGTH);
                     } else {
                         $courses_options[MESSAGE_VIEW_COURSE.$course->id] = $shortname;
-                    }
+                    }*/
+                    ($fullname = format_string($course->fullname, true, array('context' => $coursecontexts[$course->id]));
+                    //if (textlib::strlen($shortname) > MESSAGE_MAX_COURSE_NAME_LENGTH) {
+                    //    $courses_options[MESSAGE_VIEW_COURSE.$course->id] = '...'.textlib::substr($fullname, -MESSAGE_MAX_COURSE_NAME_LENGTH);
+                    //} else {
+                        $courses_options[MESSAGE_VIEW_COURSE.$course->id] = $fullname;
+                    //}
                 }
             }
 
@@ -579,12 +585,18 @@ TEMP */
             foreach($courses as $course) {
                 if (has_capability('moodle/course:viewparticipants', $coursecontexts[$course->id])) {
                     //Not using short_text() as we want the end of the course name. Not the beginning.
-                    $shortname = format_string($course->shortname, true, array('context' => $coursecontexts[$course->id]));
+                    /*$shortname = format_string($course->shortname, true, array('context' => $coursecontexts[$course->id]));
                     if (textlib::strlen($shortname) > MESSAGE_MAX_COURSE_NAME_LENGTH) {
                         $courses_options[MESSAGE_VIEW_COURSE.$course->id] = '...'.textlib::substr($shortname, -MESSAGE_MAX_COURSE_NAME_LENGTH);
                     } else {
                         $courses_options[MESSAGE_VIEW_COURSE.$course->id] = $shortname;
-                    }
+                    }*/
+                    $fullname = format_string($course->fullname, true, array('context' => $coursecontexts[$course->id]));
+                    //if (textlib::strlen($fullname) > MESSAGE_MAX_COURSE_NAME_LENGTH) {
+                    //    $courses_options[MESSAGE_VIEW_COURSE.$course->id] = '...'.textlib::substr($fullname, -MESSAGE_MAX_COURSE_NAME_LENGTH);
+                    //} else {
+                        $courses_options[MESSAGE_VIEW_COURSE.$course->id] = $fullname;
+                    //}
                 }
             }
 
