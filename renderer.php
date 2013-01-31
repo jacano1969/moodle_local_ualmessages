@@ -257,7 +257,7 @@ TEMP */
                     } else {
                         $courses_options[MESSAGE_VIEW_COURSE.$course->id] = $shortname;
                     }*/
-                    ($fullname = format_string($course->fullname, true, array('context' => $coursecontexts[$course->id]));
+                    $fullname = format_string($course->fullname, true, array('context' => $coursecontexts[$course->id]));
                     //if (textlib::strlen($shortname) > MESSAGE_MAX_COURSE_NAME_LENGTH) {
                     //    $courses_options[MESSAGE_VIEW_COURSE.$course->id] = '...'.textlib::substr($fullname, -MESSAGE_MAX_COURSE_NAME_LENGTH);
                     //} else {
