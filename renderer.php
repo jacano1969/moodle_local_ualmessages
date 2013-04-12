@@ -531,6 +531,8 @@ TEMP */
         
         global $USER, $CFG, $PAGE, $OUTPUT;
         
+        $options = array();
+        
         $content = html_writer::start_tag('div', array('class'=>'content messages'));
         $content .= html_writer::start_tag('h1');
         $content .= get_string('yourmessages', 'local_ualmessages');
